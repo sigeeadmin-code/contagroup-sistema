@@ -342,6 +342,8 @@ table.t tbody tr:hover{background:var(--b0)}
 <aside class="sb" id="sb">
   <div class="sb-logo"><div class="ico">📊</div><div style="flex:1;min-width:0"><h1>ContaGroup ERP+CRM</h1><p>v4.0 · ERP+CRM+RRHH+Tesorería</p></div><button onclick="closeSidebar()" title="Cerrar menú" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:18px;padding:4px 6px;border-radius:6px;flex-shrink:0;line-height:1;transition:color .15s" onmouseover="this.style.color='rgba(255,255,255,.85)'" onmouseout="this.style.color='rgba(255,255,255,.4)'">✕</button></div>
   <div class="sb-emp"><label>Empresa activa</label><select class="emp-sel" id="empSel"></select></div>
+  <div id="cgCupoBox" class="hidden" style="padding:0 14px 10px"><button class="btn bo bsm" style="width:100%;justify-content:center" onclick="abrirCrearEmpresaAutoservicio()">+ Crear empresa</button><p id="cgCupoTxt" style="font-size:10.5px;color:rgba(255,255,255,.4);text-align:center;margin-top:5px"></p></div>
+  <div id="cgAuxBox" class="hidden" style="padding:0 14px 10px"></div>
   <nav class="sb-nav">
     <div class="nl">Principal</div>
     <button class="ni on" onclick="nav('dashboard')"><span class="ic">📊</span>Dashboard</button>
@@ -919,7 +921,7 @@ table.t tbody tr:hover{background:var(--b0)}
 
 <div class="mo" id="mIC"><div class="mb"><div class="mh"><h3>🔄 Transacción Intercompany</h3><button class="mx" onclick="closeM('mIC')">✕</button></div><div class="mc"><div class="g2"><div class="fg"><label class="fl2">Empresa origen</label><select id="ic_ori" class="fc"></select></div><div class="fg"><label class="fl2">Empresa destino</label><select id="ic_dst" class="fc"></select></div></div><div class="g2"><div class="fg"><label class="fl2">Fecha</label><input type="date" id="ic_fec" class="fc"></div><div class="fg"><label class="fl2">Monto</label><input type="number" step="0.01" id="ic_mon" class="fc" placeholder="0.00"></div></div><div class="fg"><label class="fl2">Concepto</label><input type="text" id="ic_con" class="fc" placeholder="Servicio de administración, préstamo..."></div></div><div class="mf"><button class="btn bo" onclick="closeM('mIC')">Cancelar</button><button class="btn bp" onclick="saveIC()">💾 Registrar</button></div></div></div>
 
-<div class="mo" id="mUsuario"><div class="mb"><div class="mh"><h3>👤 <span id="mUsrTtl">Nuevo Usuario</span></h3><button class="mx" onclick="closeM('mUsuario')">✕</button></div><div class="mc"><input type="hidden" id="u_id"><div class="g2"><div class="fg"><label class="fl2">Nombre</label><input type="text" id="u_nom" class="fc"></div><div class="fg"><label class="fl2">Email</label><input type="email" id="u_ema" class="fc"></div></div><div class="g2"><div class="fg"><label class="fl2">Rol</label><select id="u_rol" class="fc" onchange="onRolUsuarioChange()"><option>Super Administrador</option><option>Admin Empresa</option><option>Contador</option><option>Cajero</option><option>Contador General</option><option>Contador de Empresa</option><option>Jefe de Nómina</option><option>Bodeguero</option><option>Auditor</option></select></div><div class="fg"><label class="fl2">Empresa asignada</label><select id="u_emp" class="fc"><option value="">Todas</option></select></div></div><div class="g2"><div class="fg"><label class="fl2">Contraseña</label><input type="password" id="u_pwd" class="fc" placeholder="Dejar en blanco para no cambiar"></div><div></div></div><div class="fg" id="u_nom_wrap" style="display:none"><label class="fl2">Módulos permitidos</label><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;background:var(--n0);border-radius:var(--rm);padding:10px"><label id="u_perm_pos_wrap" style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_pos" checked style="width:auto">Punto de Venta</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_ventas" checked style="width:auto">Ventas / Facturas</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_inventario" checked style="width:auto">Inventario y Kardex</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_contabilidad" checked style="width:auto">Contabilidad y P&amp;L</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_acceso_nom" style="width:auto">Módulo de Nómina</label></div></div><div class="fg" id="u_rg_wrap" style="display:none"><label class="fl2">Roles que este Admin Empresa podrá asignar a sus empleados</label><div id="u_rg_box" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;background:var(--n0);border-radius:var(--rm);padding:10px"></div></div></div><div class="mf"><button class="btn bo" onclick="closeM('mUsuario')">Cancelar</button><button class="btn bp" onclick="saveUsuario()">💾 Guardar</button></div></div></div>
+<div class="mo" id="mUsuario"><div class="mb"><div class="mh"><h3>👤 <span id="mUsrTtl">Nuevo Usuario</span></h3><button class="mx" onclick="closeM('mUsuario')">✕</button></div><div class="mc"><input type="hidden" id="u_id"><div class="g2"><div class="fg"><label class="fl2">Nombre</label><input type="text" id="u_nom" class="fc"></div><div class="fg"><label class="fl2">Email</label><input type="email" id="u_ema" class="fc"></div></div><div class="g2"><div class="fg"><label class="fl2">Rol</label><select id="u_rol" class="fc" onchange="onRolUsuarioChange()"><option>Super Administrador</option><option>Admin Empresa</option><option>Contador</option><option>Cajero</option><option>Contador General</option><option>Contador de Empresa</option><option>Jefe de Nómina</option><option>Bodeguero</option><option>Auditor</option></select></div><div class="fg"><label class="fl2">Empresa asignada</label><select id="u_emp" class="fc"><option value="">Todas</option></select></div></div><div class="g2"><div class="fg"><label class="fl2">Contraseña</label><input type="password" id="u_pwd" class="fc" placeholder="Dejar en blanco para no cambiar"></div><div></div></div><div class="fg" id="u_nom_wrap" style="display:none"><label class="fl2">Módulos permitidos</label><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;background:var(--n0);border-radius:var(--rm);padding:10px"><label id="u_perm_pos_wrap" style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_pos" checked style="width:auto">Punto de Venta</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_ventas" checked style="width:auto">Ventas / Facturas</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_inventario" checked style="width:auto">Inventario y Kardex</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_perm_contabilidad" checked style="width:auto">Contabilidad y P&amp;L</label><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer"><input type="checkbox" id="u_acceso_nom" style="width:auto">Módulo de Nómina</label></div></div><div class="fg" id="u_rg_wrap" style="display:none"><label class="fl2">Roles que este Admin Empresa podrá asignar a sus empleados</label><div id="u_rg_box" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;background:var(--n0);border-radius:var(--rm);padding:10px"></div></div><div class="fg" id="u_cupo_wrap" style="display:none"><label class="fl2">Cupo de empresas que puede crear/atender (autoservicio)</label><input type="number" id="u_cupo" class="fc" placeholder="Ej. 10" min="0"></div></div><div class="mf"><button class="btn bo" onclick="closeM('mUsuario')">Cancelar</button><button class="btn bp" onclick="saveUsuario()">💾 Guardar</button></div></div></div>
 <!-- MODALES CXC -->
 <div class="mo" id="mCargo"><div class="mb"><div class="mh"><h3>💳 <span id="mCargoTtl">Nuevo cargo</span></h3><button class="mx" onclick="closeM('mCargo')">✕</button></div><div class="mc">
   <input type="hidden" id="cg_id">
@@ -1086,6 +1088,19 @@ table.t tbody tr:hover{background:var(--b0)}
 </div></div>
 
 <div class="mo" id="mEmpresa"><div class="mb"><div class="mh"><h3>🏢 <span id="mEmpresaTtl">Nueva Empresa</span></h3><button class="mx" onclick="closeM('mEmpresa')">✕</button></div><div class="mc"><input type="hidden" id="em_id"><div class="g2"><div class="fg"><label class="fl2">Razón social</label><input type="text" id="em_nom" class="fc"></div><div class="fg"><label class="fl2">RUC</label><input type="text" id="em_ruc" class="fc" maxlength="13"></div></div><div class="g3"><div class="fg"><label class="fl2">Moneda</label><select id="em_mon" class="fc"><option>USD</option><option>EUR</option><option>COP</option><option>PEN</option></select></div><div class="fg"><label class="fl2">Régimen</label><select id="em_reg" class="fc"><option>General</option><option>RIMPE</option><option>Especial</option></select></div><div class="fg"><label class="fl2">Estado</label><select id="em_est" class="fc"><option>Activa</option><option>Inactiva</option></select></div></div></div><div class="mf"><button class="btn bo" onclick="closeM('mEmpresa')">Cancelar</button><button class="btn bp" onclick="saveEmpresa()">💾 Guardar</button></div></div></div>
+
+<div class="mo" id="mEmpresaAuto"><div class="mb"><div class="mh"><h3>🏢 Nueva Empresa (Cliente)</h3><button class="mx" onclick="closeM('mEmpresaAuto')">✕</button></div><div class="mc">
+  <p id="cgaCupoInfo" style="font-size:12px;color:var(--n5);margin-bottom:12px"></p>
+  <div class="g2"><div class="fg"><label class="fl2">Razón social</label><input type="text" id="cga_nom" class="fc" placeholder="Nombre del cliente"></div><div class="fg"><label class="fl2">RUC</label><input type="text" id="cga_ruc" class="fc" maxlength="13"></div></div>
+  <div class="g2"><div class="fg"><label class="fl2">Moneda</label><select id="cga_mon" class="fc"><option>USD</option><option>EUR</option><option>COP</option><option>PEN</option></select></div><div class="fg"><label class="fl2">Régimen</label><select id="cga_reg" class="fc"><option>General</option><option>RIMPE</option><option>Especial</option></select></div></div>
+</div><div class="mf"><button class="btn bo" onclick="closeM('mEmpresaAuto')">Cancelar</button><button class="btn bp" onclick="crearEmpresaAutoservicio()">💾 Crear empresa</button></div></div></div>
+
+<div class="mo" id="mAuxiliar"><div class="mb"><div class="mh"><h3>🧑‍💼 Contador Auxiliar</h3><button class="mx" onclick="closeM('mAuxiliar')">✕</button></div><div class="mc">
+  <p style="font-size:12px;color:var(--n5);margin-bottom:12px">Tendrá acceso a las mismas empresas que tú atiendes actualmente.</p>
+  <div class="fg"><label class="fl2">Nombre</label><input type="text" id="aux_nom" class="fc"></div>
+  <div class="fg"><label class="fl2">Email</label><input type="email" id="aux_ema" class="fc"></div>
+  <div class="fg"><label class="fl2">Contraseña</label><input type="password" id="aux_pwd" class="fc" placeholder="Mínimo 8 caracteres"></div>
+</div><div class="mf"><button class="btn bo" onclick="closeM('mAuxiliar')">Cancelar</button><button class="btn bp" onclick="crearContadorAuxiliar()">💾 Crear auxiliar</button></div></div></div>
 
 <!-- Modal Compra -->
 <div class="mo" id="mCompra"><div class="mb lg"><div class="mh"><h3>🛒 <span id="mc_ttl">Nueva Compra</span></h3><button class="mx" onclick="closeM('mCompra')">✕</button></div><div class="mc">
@@ -1565,7 +1580,7 @@ async function loadEmpresas(){
   const sel=document.getElementById('empSel');
   sel.innerHTML=listaEmps.length?listaEmps.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join(''):'<option value="">Sin empresas asignadas</option>';
   sel.onchange=async()=>{CE=sel.value||null;CEO=listaEmps.find(e=>e.id===CE)||null;aplicarLogoSidebar(CEO?.logo_url,CEO?.nombre);await refresh();await applyRoleUI()};
-  if(CU&&CU.rol==='Contador General'){
+  if(CU&&(CU.rol==='Contador General'||CU.rol==='Contador Auxiliar')){
     if(listaEmps.length){CE=listaEmps[0].id;CEO=listaEmps[0];sel.value=CE}else{CE=null;CEO=null}
     sel.disabled=false;sel.title='Cambia entre las empresas que te han dado acceso';
   }else if(CU&&CU.rol!=='Super Administrador'&&CU.empresa_id){
@@ -1589,6 +1604,73 @@ function nav(s){
   fn[s]?.();
 }
 async function refresh(){nav(CS)}
+
+async function actualizarCupoBox(){
+  const box=document.getElementById('cgCupoBox'),txt=document.getElementById('cgCupoTxt');
+  if(!CU||CU.rol!=='Contador General'){box.classList.add('hidden');return}
+  const{data:u}=await supa.from('usuarios').select('cupo_empresas').eq('id',CU.id).maybeSingle();
+  const cupo=u?.cupo_empresas;
+  if(!cupo){box.classList.add('hidden')}else{
+    const{count}=await supa.from('accesos_multiempresa').select('*',{count:'exact',head:true}).eq('usuario_id',CU.id).eq('estado','Activo');
+    box.classList.remove('hidden');
+    txt.textContent=`${count||0} de ${cupo} empresas usadas`;
+  }
+  await actualizarAuxBox();
+}
+async function actualizarAuxBox(){
+  const box=document.getElementById('cgAuxBox');
+  if(!CU||CU.rol!=='Contador General'){box.classList.add('hidden');return}
+  const{data:aux}=await supa.from('usuarios').select('id,nombre,email').eq('supervisor_id',CU.id).eq('rol','Contador Auxiliar').maybeSingle();
+  box.classList.remove('hidden');
+  if(aux){
+    box.innerHTML=`<div style="background:rgba(255,255,255,.06);border-radius:8px;padding:8px 10px"><p style="font-size:10.5px;color:rgba(255,255,255,.45);margin-bottom:2px">🧑‍💼 Auxiliar</p><p style="font-size:12px;color:#fff;font-weight:600">${aux.nombre}</p><button class="btn bd bsm" style="width:100%;justify-content:center;margin-top:6px" onclick="quitarContadorAuxiliar('${aux.id}')">Quitar auxiliar</button></div>`;
+  }else{
+    box.innerHTML=`<button class="btn bo bsm" style="width:100%;justify-content:center" onclick="document.getElementById('aux_nom').value='';document.getElementById('aux_ema').value='';document.getElementById('aux_pwd').value='';openM('mAuxiliar')">+ Contador auxiliar</button>`;
+  }
+}
+async function crearContadorAuxiliar(){
+  const nombre=document.getElementById('aux_nom').value.trim();
+  const email=document.getElementById('aux_ema').value.trim();
+  const pwd=document.getElementById('aux_pwd').value;
+  if(!nombre||!email)return toast('Nombre y correo son requeridos','er');
+  if(!pwd||pwd.length<8)return toast('La contraseña debe tener al menos 8 caracteres','er');
+  const btn=document.querySelector('#mAuxiliar .bp');if(btn){btn.disabled=true;btn.textContent='Creando...'}
+  try{
+    const out=await llamarAdminUsers({action:'create',rol:'Contador Auxiliar',nombre,email,password:pwd});
+    if(!out.ok)throw new Error(out.error||'No se pudo crear el auxiliar');
+    closeM('mAuxiliar');toast('Contador auxiliar creado','ok');await actualizarAuxBox();
+  }catch(e){console.error('Error al crear auxiliar:',e);toast('Error: '+e.message,'er')}
+  finally{if(btn){btn.disabled=false;btn.textContent='💾 Crear auxiliar'}}
+}
+async function quitarContadorAuxiliar(id){
+  if(!confirm('¿Quitar a tu contador auxiliar? Perderá acceso a todas las empresas.'))return;
+  const out=await llamarAdminUsers({action:'delete',id});
+  if(!out.ok){toast(out.error||'No se pudo eliminar','er');return}
+  toast('Auxiliar eliminado','wn');await actualizarAuxBox();
+}
+function abrirCrearEmpresaAutoservicio(){
+  document.getElementById('cga_nom').value='';document.getElementById('cga_ruc').value='';
+  document.getElementById('cgaCupoInfo').textContent=document.getElementById('cgCupoTxt').textContent;
+  openM('mEmpresaAuto');
+}
+async function crearEmpresaAutoservicio(){
+  const nombre=document.getElementById('cga_nom').value.trim();
+  if(!nombre)return toast('El nombre de la empresa es requerido','er');
+  const btn=document.querySelector('#mEmpresaAuto .bp');
+  if(btn){btn.disabled=true;btn.textContent='Creando...'}
+  try{
+    const{data,error}=await supa.rpc('crear_empresa_autoservicio',{p_nombre:nombre,p_ruc:document.getElementById('cga_ruc').value.trim()||null,p_moneda:document.getElementById('cga_mon').value,p_regimen:document.getElementById('cga_reg').value});
+    if(error)throw error;
+    closeM('mEmpresaAuto');toast('Empresa creada','ok');
+    await loadEmpresas();CE=data;CEO={id:data,nombre};document.getElementById('empSel').value=data;
+    await applyRoleUI();
+  }catch(e){
+    console.error('Error al crear empresa por autoservicio:',e);
+    toast('Error: '+e.message,'er');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='💾 Crear empresa'}
+  }
+}
 const NAV_VENTAS=['facturas','cxc','crm'];
 const NAV_INVENTARIO=['inventario','estadisticas'];
 const NAV_CONTABILIDAD=['cuentas','asientos','conciliacion','reportes','finanzas','tesoreria','bancos','caja','compras','retenciones','ats','ice'];
@@ -1596,19 +1678,22 @@ const NAV_NOMINA=['nomina','rubros','nomina_detalle','empleados_perfil'];
 async function applyRoleUI(){
   if(!CU)return;
   document.querySelectorAll('.ni').forEach(b=>b.classList.remove('rhide'));
+  document.getElementById('cgCupoBox')?.classList.add('hidden');
+  document.getElementById('cgAuxBox')?.classList.add('hidden');
   if(CU.rol==='Cajero'){
     document.querySelectorAll('.ni').forEach(b=>{if(!/nav\('pos'\)/.test(b.getAttribute('onclick')||''))b.classList.add('rhide')});
     nav('pos');
   }else if(CU.rol==='Contador'){
     const perm=CU.permisos||{ventas:true,inventario:true,contabilidad:true,nomina:!!CU.acceso_nomina};
     aplicarBuckets(perm);
-  }else if(CU.rol==='Contador General'){
+  }else if(CU.rol==='Contador General'||CU.rol==='Contador Auxiliar'){
     let perm={ventas:true,inventario:true,contabilidad:true,nomina:false};
     if(CE){
       const{data:acceso}=await supa.from('accesos_multiempresa').select('*').eq('usuario_id',CU.id).eq('empresa_id',CE).eq('estado','Activo').maybeSingle();
       if(acceso)perm=acceso.permisos;
     }
     aplicarBuckets(perm);
+    if(CU.rol==='Contador General')await actualizarCupoBox();
   }else if(CU.rol==='Admin Empresa'){
     const perm=CU.permisos||{pos:true,ventas:true,inventario:true,contabilidad:true,nomina:true};
     aplicarBuckets(perm);
@@ -3512,6 +3597,7 @@ function onRolUsuarioChange(){
   document.getElementById('u_perm_pos_wrap').style.display=(rol==='Admin Empresa')?'flex':'none';
   const puedeVerRolesGestionables=(rol==='Admin Empresa')&&(!CU||CU.rol==='Super Administrador');
   document.getElementById('u_rg_wrap').style.display=puedeVerRolesGestionables?'flex':'none';
+  document.getElementById('u_cupo_wrap').style.display=(rol==='Contador General'&&(!CU||CU.rol==='Super Administrador'))?'flex':'none';
   if(puedeVerRolesGestionables)pintarRolesGestionables([]);
   ['u_perm_ventas','u_perm_inventario','u_perm_contabilidad','u_acceso_nom'].forEach(id=>{
     const cb=document.getElementById(id);cb.disabled=false;cb.parentElement.style.opacity='1';cb.title='';
@@ -3529,7 +3615,7 @@ function onRolUsuarioChange(){
 async function editUsuario(id){
   const{data:u,error}=await supa.from('usuarios').select('*').eq('id',id).maybeSingle();
   if(error||!u)return toast('No se pudo cargar el usuario','er');
-  document.getElementById('mUsrTtl').textContent='Editar Usuario';document.getElementById('u_id').value=u.id;document.getElementById('u_nom').value=u.nombre;document.getElementById('u_ema').value=u.email;document.getElementById('u_pwd').value='';await prepUsuarioModalForRole();document.getElementById('u_rol').value=u.rol;const perm=u.permisos||{pos:true,ventas:true,inventario:true,contabilidad:true,nomina:!!u.acceso_nomina};document.getElementById('u_perm_pos').checked=perm.pos!==false;document.getElementById('u_perm_ventas').checked=perm.ventas!==false;document.getElementById('u_perm_inventario').checked=perm.inventario!==false;document.getElementById('u_perm_contabilidad').checked=perm.contabilidad!==false;document.getElementById('u_acceso_nom').checked=!!perm.nomina;onRolUsuarioChange();if(u.rol==='Admin Empresa'&&(!CU||CU.rol==='Super Administrador'))pintarRolesGestionables(u.roles_gestionables||[]);if(!(CU&&CU.rol==='Admin Empresa'))document.getElementById('u_emp').value=u.empresa_id||'';document.getElementById('mUsuario').classList.add('open');
+  document.getElementById('mUsrTtl').textContent='Editar Usuario';document.getElementById('u_id').value=u.id;document.getElementById('u_nom').value=u.nombre;document.getElementById('u_ema').value=u.email;document.getElementById('u_pwd').value='';await prepUsuarioModalForRole();document.getElementById('u_rol').value=u.rol;document.getElementById('u_cupo').value=u.cupo_empresas??'';const perm=u.permisos||{pos:true,ventas:true,inventario:true,contabilidad:true,nomina:!!u.acceso_nomina};document.getElementById('u_perm_pos').checked=perm.pos!==false;document.getElementById('u_perm_ventas').checked=perm.ventas!==false;document.getElementById('u_perm_inventario').checked=perm.inventario!==false;document.getElementById('u_perm_contabilidad').checked=perm.contabilidad!==false;document.getElementById('u_acceso_nom').checked=!!perm.nomina;onRolUsuarioChange();if(u.rol==='Admin Empresa'&&(!CU||CU.rol==='Super Administrador'))pintarRolesGestionables(u.roles_gestionables||[]);if(!(CU&&CU.rol==='Admin Empresa'))document.getElementById('u_emp').value=u.empresa_id||'';document.getElementById('mUsuario').classList.add('open');
 }
 async function llamarAdminUsers(payload){
   try{
@@ -3549,7 +3635,7 @@ async function saveUsuario(){
   const rol=document.getElementById('u_rol').value;
   let empresa_id=document.getElementById('u_emp').value||null;
   if(CU&&CU.rol==='Admin Empresa')empresa_id=CU.empresa_id;
-  if(rol!=='Super Administrador'&&!empresa_id)return toast('Empresa asignada requerida para este rol','er');
+  if(rol!=='Super Administrador'&&rol!=='Contador General'&&!empresa_id)return toast('Empresa asignada requerida para este rol','er');
   const pwd=document.getElementById('u_pwd').value;
   if(!id&&!pwd)return toast('Contraseña requerida','er');
   if(pwd&&pwd.length<8)return toast('La contraseña debe tener al menos 8 caracteres','er');
@@ -3561,6 +3647,10 @@ async function saveUsuario(){
     const payload=id?{action:'update',id,nombre:n,email,password:pwd||undefined,rol,empresa_id,permisos}:{action:'create',nombre:n,email,password:pwd,rol,empresa_id,permisos};
     if(rol==='Admin Empresa'&&(!CU||CU.rol==='Super Administrador')){
       payload.roles_gestionables=Array.from(document.querySelectorAll('.u_rg_cb:checked')).map(cb=>cb.value);
+    }
+    if(rol==='Contador General'&&(!CU||CU.rol==='Super Administrador')){
+      const cupoVal=document.getElementById('u_cupo').value;
+      payload.cupo_empresas=cupoVal===''?null:parseInt(cupoVal);
     }
     const out=await llamarAdminUsers(payload);
     if(!out.ok){toast(out.error||'Error al guardar el usuario','er');return}
