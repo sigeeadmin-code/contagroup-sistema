@@ -2925,11 +2925,15 @@ function renderPosVenta(){
     <div class="row" style="margin-bottom:8px">
       <button id="btn_nv" class="btn bp bsm" onclick="posSetTipoDoc('NOTA_VENTA')">Nota de venta</button>
       <button id="btn_fac" class="btn bo bsm" onclick="posSetTipoDoc('FACTURA')">Factura</button>
+      <button id="btn_prof" class="btn bo bsm" onclick="posSetTipoDoc('PROFORMA')">Proforma</button>
     </div>
     <div id="pos_cliente_wrap"></div>
-    <div id="pos_pagos" style="margin-bottom:6px"></div>
-    <button class="btn bo bsm" style="width:100%;margin-bottom:8px" onclick="posAgregarPago()">+ Método de pago</button>
-    <div id="pos_restante" style="font-size:11.5px;font-weight:600;text-align:right;margin-bottom:10px"></div>
+    <div id="pos_dias_wrap" class="hidden" style="margin-bottom:8px"><label class="fl2">Días de validez de la proforma</label><input type="number" id="pos_dias_validez" class="fc" value="15" min="1"></div>
+    <div id="pos_pagos_seccion">
+      <div id="pos_pagos" style="margin-bottom:6px"></div>
+      <button class="btn bo bsm" style="width:100%;margin-bottom:8px" onclick="posAgregarPago()">+ Método de pago</button>
+      <div id="pos_restante" style="font-size:11.5px;font-weight:600;text-align:right;margin-bottom:10px"></div>
+    </div>
     <button class="btn bp" style="width:100%" id="btn_confirmar" onclick="posConfirmarVenta()" disabled>✅ Confirmar venta</button>
   </div></div>
 </div>`;
@@ -2998,12 +3002,22 @@ function posTotales(){const sub=posCart.reduce((a,i)=>a+i.precio*i.cantidad,0);c
 function posRenderCart(){posRenderLista();posActualizarTotales()}
 function posRenderTotales(sub,iva,tot){
   ['pos_sub','pos_iva','pos_tot'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=fmt([sub,iva,tot][i])});
-  const btn_nv=document.getElementById('btn_nv'),btn_fac=document.getElementById('btn_fac');
+  const btn_nv=document.getElementById('btn_nv'),btn_fac=document.getElementById('btn_fac'),btn_prof=document.getElementById('btn_prof');
   if(btn_nv)btn_nv.className=`btn ${posTipoDoc==='NOTA_VENTA'?'bp':'bo'} bsm`;
   if(btn_fac)btn_fac.className=`btn ${posTipoDoc==='FACTURA'?'bp':'bo'} bsm`;
+  if(btn_prof)btn_prof.className=`btn ${posTipoDoc==='PROFORMA'?'bp':'bo'} bsm`;
   const cw=document.getElementById('pos_cliente_wrap');
-  if(cw)cw.innerHTML=posTipoDoc==='FACTURA'?`<div style="display:flex;gap:6px;margin-bottom:8px"><select id="pos_cliente" class="fc" style="flex:1"><option value="">Seleccionar cliente...</option></select><button class="btn bo bsm" onclick="openM('mClienteRapido');window._clienteRapidoCtx='pos'" title="Crear cliente nuevo">+ Nuevo</button></div>`:'';
-  if(posTipoDoc==='FACTURA')fillCliSelPos();
+  if(cw)cw.innerHTML=(posTipoDoc==='FACTURA'||posTipoDoc==='PROFORMA')?`<div style="display:flex;gap:6px;margin-bottom:8px"><select id="pos_cliente" class="fc" style="flex:1"><option value="">${posTipoDoc==='PROFORMA'?'Cliente (opcional)...':'Seleccionar cliente...'}</option></select><button class="btn bo bsm" onclick="openM('mClienteRapido');window._clienteRapidoCtx='pos'" title="Crear cliente nuevo">+ Nuevo</button></div>`:'';
+  if(posTipoDoc==='FACTURA'||posTipoDoc==='PROFORMA')fillCliSelPos();
+  const dw=document.getElementById('pos_dias_wrap'),ps=document.getElementById('pos_pagos_seccion'),btnC=document.getElementById('btn_confirmar');
+  if(posTipoDoc==='PROFORMA'){
+    dw?.classList.remove('hidden');ps?.classList.add('hidden');
+    if(btnC){btnC.textContent='📋 Generar Proforma';btnC.setAttribute('onclick','posGenerarProforma()');btnC.disabled=posCart.length===0}
+    return;
+  }else{
+    dw?.classList.add('hidden');ps?.classList.remove('hidden');
+    if(btnC){btnC.textContent='✅ Confirmar venta';btnC.setAttribute('onclick','posConfirmarVenta()')}
+  }
   if(posPagos.length===0&&tot>0)posPagos=[{metodo:'Efectivo',monto:parseFloat(tot.toFixed(2))}];
   else if(posPagos.length===1)posPagos[0].monto=parseFloat(tot.toFixed(2));
   posRenderPagos();
@@ -3060,6 +3074,25 @@ async function posConfirmarVenta(){
   posProductos=(await supa.from('productos').select('*').eq('empresa_id',CE)).data||[];
   renderPosVenta();
   toast(`✓ ${numero} registrada — nueva venta lista`,'ok');
+}
+async function posGenerarProforma(){
+  if(posCart.length===0)return toast('Agrega productos al carrito','er');
+  if(!CE)return toast('Selecciona una empresa','er');
+  const{sub,iva,tot}=posTotales();
+  const dias=parseInt(document.getElementById('pos_dias_validez').value)||15;
+  if(dias<1)return toast('Los días de validez deben ser al menos 1','er');
+  const sel=document.getElementById('pos_cliente');const clienteId=sel?.value||null;
+  const hoy=new Date();const validaHasta=new Date(hoy.getTime()+dias*86400000);
+  const lineas=posCart.map(it=>({descripcion:it.nombre,cantidad:it.cantidad,precio:it.precio}));
+  const{count}=await supa.from('proformas').select('*',{count:'exact',head:true}).eq('empresa_id',CE);
+  const numero=`PRO-${String((count||0)+1).padStart(5,'0')}`;
+  const data={empresa_id:CE,cliente_id:clienteId,fecha:hoy.toISOString().slice(0,10),valida_hasta:validaHasta.toISOString().slice(0,10),nota:`Generada desde Punto de Venta · válida ${dias} día(s)`,lineas,subtotal:sub,iva,total:tot,numero,estado:'Borrador'};
+  const{error}=await supa.from('proformas').insert(data);
+  if(error){toast('Error al generar la proforma: '+error.message,'er');return}
+  imprimirProformaData(data);
+  posCart=[];posPagos=[];posTipoDoc='NOTA_VENTA';
+  renderPosVenta();
+  toast(`✓ Proforma ${numero} generada — válida ${dias} día(s)`,'ok');
 }
 async function posImprimirTicket(f){
   if(!f){return}
