@@ -804,7 +804,7 @@ table.t tbody tr:hover{background:var(--b0)}
   <div id="ad-config" class="card hidden"><div class="cb">
     <div id="miEmpresaBox" class="hidden" style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--n2)">
       <p style="font-size:13.5px;font-weight:700;color:var(--n7);margin-bottom:4px">🏢 Mi Empresa</p>
-      <p style="font-size:12px;color:var(--n5);margin-bottom:14px">Personaliza el nombre y el logo que verán tus usuarios</p>
+      <p style="font-size:12px;color:var(--n5);margin-bottom:14px">Personaliza el nombre, el logo y el % de IVA que usa tu empresa</p>
       <div class="g2">
         <div class="fg"><label class="fl2">Nombre de la empresa</label><input type="text" id="me_nom" class="fc" placeholder="Ej. Consultorio Dr. Pérez"></div>
         <div class="fg"><label class="fl2">Logo (PNG, JPG o SVG, máx 2MB)</label><div style="display:flex;align-items:center;gap:12px">
@@ -812,6 +812,7 @@ table.t tbody tr:hover{background:var(--b0)}
           <input type="file" id="me_logo_file" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="fc">
         </div></div>
       </div>
+      <div class="fg" style="max-width:220px"><label class="fl2">% IVA vigente (según normativa actual)</label><input type="number" step="0.01" min="0" max="100" id="me_iva" class="fc" placeholder="12"></div>
       <div class="row" style="margin-top:14px"><button class="btn bp bsm" onclick="saveMiEmpresa()">💾 Guardar cambios</button></div>
     </div>
     <p style="font-size:13px;color:var(--n5);margin-bottom:16px">Gestión de datos del sistema.</p><div class="row"><button class="btn bo" onclick="exportDB()">📥 Exportar BD JSON</button><button class="btn bo" onclick="if(confirm('¿Recargar demo?'))location.reload()">🔄 Demo</button><button class="btn bd" onclick="if(confirm('⚠️ ¿Borrar TODO?'))clearDB()">🗑️ Limpiar BD</button></div><div class="div"></div><div style="font-size:11.5px;color:var(--n5);line-height:1.8"><strong>ContaGroup v4.0</strong> · ERP+CRM · IndexedDB · Offline<br>IA: DeepSeek · PDF: jsPDF 2.5 · NEC/NIIF Ecuador</div></div></div>
@@ -927,7 +928,7 @@ table.t tbody tr:hover{background:var(--b0)}
 <!-- MODALES -->
 <div class="mo" id="mAsi"><div class="mb lg"><div class="mh"><h3>📖 Nuevo Asiento</h3><button class="mx" onclick="closeM('mAsi')">✕</button></div><div class="mc"><div class="g2"><div class="fg"><label class="fl2">Concepto</label><input type="text" id="a_con" class="fc" placeholder="Descripción..."></div><div class="fg"><label class="fl2">Fecha</label><input type="date" id="a_fec" class="fc"></div></div><div class="div"></div><div class="lh lh3"><span>Cuenta</span><span>Debe</span><span>Haber</span><span></span></div><div id="lcAsi"></div><button class="btn bo bsm" onclick="addLA()" style="margin-top:4px">+ Línea</button><div class="bs2"><div class="bsr"><span>Total Debe:</span><strong class="fm" id="tDebe">$0.00</strong></div><div class="bsr"><span>Total Haber:</span><strong class="fm" id="tHaber">$0.00</strong></div><div class="bss ber2" id="balSt">❌ Desequilibrado</div></div></div><div class="mf"><button class="btn bo" onclick="closeM('mAsi')">Cancelar</button><button class="btn bp" onclick="saveAsi()">💾 Guardar</button></div></div></div>
 
-<div class="mo" id="mFac"><div class="mb lg"><div class="mh"><h3>📄 Nueva Factura</h3><button class="mx" onclick="closeM('mFac')">✕</button></div><div class="mc"><div class="g2"><div class="fg"><label class="fl2">Cliente</label><select id="f_cli" class="fc"><option value="">Seleccionar...</option></select></div><div class="fg"><label class="fl2">Fecha</label><input type="date" id="f_fec" class="fc"></div></div><div class="div"></div><div class="lh lh5"><span>Producto</span><span>Cantidad</span><span>Precio</span><span>Total</span><span></span></div><div id="lcFac"></div><button class="btn bo bsm" onclick="addLF()" style="margin-top:4px">+ Línea</button><div class="bs2"><div class="bsr"><span>Subtotal:</span><strong class="fm" id="f_sub">$0.00</strong></div><div class="bsr"><span>IVA 12%:</span><strong class="fm" id="f_iva">$0.00</strong></div><div class="bsr" style="font-size:15px"><span><strong>TOTAL:</strong></span><strong class="fm" style="color:var(--b6)" id="f_tot">$0.00</strong></div></div></div><div class="mf"><button class="btn bo" onclick="closeM('mFac')">Cancelar</button><button class="btn bp" onclick="saveFac()">💾 Guardar</button></div></div></div>
+<div class="mo" id="mFac"><div class="mb lg"><div class="mh"><h3>📄 Nueva Factura</h3><button class="mx" onclick="closeM('mFac')">✕</button></div><div class="mc"><div class="g2"><div class="fg"><label class="fl2">Cliente</label><select id="f_cli" class="fc"><option value="">Seleccionar...</option></select></div><div class="fg"><label class="fl2">Fecha</label><input type="date" id="f_fec" class="fc"></div></div><div class="div"></div><div class="lh lh5"><span>Producto</span><span>Cantidad</span><span>Precio</span><span>Total</span><span></span></div><div id="lcFac"></div><button class="btn bo bsm" onclick="addLF()" style="margin-top:4px">+ Línea</button><div class="bs2"><div class="bsr"><span>Subtotal:</span><strong class="fm" id="f_sub">$0.00</strong></div><div class="bsr"><span>IVA:</span><strong class="fm" id="f_iva">$0.00</strong></div><div class="bsr" style="font-size:15px"><span><strong>TOTAL:</strong></span><strong class="fm" style="color:var(--b6)" id="f_tot">$0.00</strong></div></div></div><div class="mf"><button class="btn bo" onclick="closeM('mFac')">Cancelar</button><button class="btn bp" onclick="saveFac()">💾 Guardar</button></div></div></div>
 
 <div class="mo" id="mCuenta"><div class="mb"><div class="mh"><h3>📒 <span id="mCuentaTtl">Nueva Cuenta</span></h3><button class="mx" onclick="closeM('mCuenta')">✕</button></div><div class="mc"><input type="hidden" id="c_id"><div class="g2"><div class="fg"><label class="fl2">Código</label><input type="text" id="c_cod" class="fc" placeholder="1.1.01"></div><div class="fg"><label class="fl2">Nombre</label><input type="text" id="c_nom2" class="fc"></div></div><div class="g2"><div class="fg"><label class="fl2">Clase</label><select id="c_cla" class="fc"><option value="1">1 - Activo</option><option value="2">2 - Pasivo</option><option value="3">3 - Patrimonio</option><option value="4">4 - Ingreso</option><option value="5">5 - Gasto</option></select></div><div class="fg"><label class="fl2">Tipo</label><input type="text" id="c_tip" class="fc" placeholder="Activo Corriente"></div></div><div class="fg"><label class="fl2">Saldo inicial</label><input type="number" step="0.01" id="c_sal" class="fc" placeholder="0.00"></div></div><div class="mf"><button class="btn bo" onclick="closeM('mCuenta')">Cancelar</button><button class="btn bp" onclick="saveCuenta()">💾 Guardar</button></div></div></div>
 
@@ -1067,7 +1068,7 @@ table.t tbody tr:hover{background:var(--b0)}
     </table>
     <div style="text-align:right;margin-top:8px;font-size:13px">
       <div>Subtotal: <strong id="pf_sub">$0.00</strong></div>
-      <div>IVA 12%: <strong id="pf_iva">$0.00</strong></div>
+      <div>IVA: <strong id="pf_iva">$0.00</strong></div>
       <div style="font-size:15px;font-weight:600">Total: <strong id="pf_tot" style="color:var(--b6)">$0.00</strong></div>
     </div>
   </div>
@@ -1122,7 +1123,7 @@ table.t tbody tr:hover{background:var(--b0)}
   </div>
 </div></div>
 
-<div class="mo" id="mEmpresa"><div class="mb"><div class="mh"><h3>🏢 <span id="mEmpresaTtl">Nueva Empresa</span></h3><button class="mx" onclick="closeM('mEmpresa')">✕</button></div><div class="mc"><input type="hidden" id="em_id"><div class="g2"><div class="fg"><label class="fl2">Razón social</label><input type="text" id="em_nom" class="fc"></div><div class="fg"><label class="fl2">RUC</label><input type="text" id="em_ruc" class="fc" maxlength="13"></div></div><div class="g3"><div class="fg"><label class="fl2">Moneda</label><select id="em_mon" class="fc"><option>USD</option><option>EUR</option><option>COP</option><option>PEN</option></select></div><div class="fg"><label class="fl2">Régimen</label><select id="em_reg" class="fc"><option>General</option><option>RIMPE</option><option>Especial</option></select></div><div class="fg"><label class="fl2">Estado</label><select id="em_est" class="fc"><option>Activa</option><option>Inactiva</option></select></div></div></div><div class="mf"><button class="btn bo" onclick="closeM('mEmpresa')">Cancelar</button><button class="btn bp" onclick="saveEmpresa()">💾 Guardar</button></div></div></div>
+<div class="mo" id="mEmpresa"><div class="mb"><div class="mh"><h3>🏢 <span id="mEmpresaTtl">Nueva Empresa</span></h3><button class="mx" onclick="closeM('mEmpresa')">✕</button></div><div class="mc"><input type="hidden" id="em_id"><div class="g2"><div class="fg"><label class="fl2">Razón social</label><input type="text" id="em_nom" class="fc"></div><div class="fg"><label class="fl2">RUC</label><input type="text" id="em_ruc" class="fc" maxlength="13"></div></div><div class="g3"><div class="fg"><label class="fl2">Moneda</label><select id="em_mon" class="fc"><option>USD</option><option>EUR</option><option>COP</option><option>PEN</option></select></div><div class="fg"><label class="fl2">Régimen</label><select id="em_reg" class="fc"><option>General</option><option>RIMPE</option><option>Especial</option></select></div><div class="fg"><label class="fl2">Estado</label><select id="em_est" class="fc"><option>Activa</option><option>Inactiva</option></select></div></div><div class="fg" style="max-width:180px"><label class="fl2">% IVA vigente</label><input type="number" step="0.01" min="0" max="100" id="em_iva" class="fc" placeholder="12"></div></div><div class="mf"><button class="btn bo" onclick="closeM('mEmpresa')">Cancelar</button><button class="btn bp" onclick="saveEmpresa()">💾 Guardar</button></div></div></div>
 
 <div class="mo" id="mEmpresaAuto"><div class="mb"><div class="mh"><h3>🏢 Nueva Empresa (Cliente)</h3><button class="mx" onclick="closeM('mEmpresaAuto')">✕</button></div><div class="mc">
   <p id="cgaCupoInfo" style="font-size:12px;color:var(--n5);margin-bottom:12px"></p>
@@ -1528,7 +1529,7 @@ supa.auth.onAuthStateChange((event)=>{
 /* ═══════════════════════════════════════
    APP ENGINE
 ═══════════════════════════════════════ */
-let DB=null,CE=null,CEO=null,CS='dashboard',icMsgs=[],CU=null;
+let DB=null,CE=null,CEO=null,CS='dashboard',icMsgs=[],CU=null,IVA_RATE=0.12;
 const TITLES={dashboard:'Dashboard',cuentas:'Plan de Cuentas',asientos:'Asientos',conciliacion:'Conciliación Bancaria',facturas:'Facturas',cxc:'Cuentas por Cobrar',crm:'CRM Pipeline',reportes:'Reportes PDF',finanzas:'Finanzas Pro',auditoria:'Auditoría',intercompany:'Intercompany IA',rubros:'Rubros de Nómina',nomina_detalle:'Rol de Pago Detallado',empleados_perfil:'Perfil de Empleados',tesoreria:'Tesorería',bancos:'Bancos y Cuentas',caja:'Caja y Movimientos',nomina:'Nómina RRHH',inventario:'Inventario',admin:'Administración',compras:'Compras (Proveedores)',retenciones:'Retenciones Emitidas',ats:'Generador ATS',ice:'Generador ICE',pos:'Punto de Venta',estadisticas:'Estadísticas'};
 // Nota: las funciones de migración de datos demo a IndexedDB (usuarios, empresas,
 // plan_cuentas, accesos_multiempresa, items_compra, hash de contraseñas) se eliminaron
@@ -1616,7 +1617,7 @@ async function loadEmpresas(){
   const listaEmps=emps||[];
   const sel=document.getElementById('empSel');
   sel.innerHTML=listaEmps.length?listaEmps.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join(''):'<option value="">Sin empresas asignadas</option>';
-  sel.onchange=async()=>{CE=sel.value||null;CEO=listaEmps.find(e=>e.id===CE)||null;aplicarLogoSidebar(CEO?.logo_url,CEO?.nombre);await refresh();await applyRoleUI()};
+  sel.onchange=async()=>{CE=sel.value||null;CEO=listaEmps.find(e=>e.id===CE)||null;IVA_RATE=(CEO?.iva_porcentaje??12)/100;aplicarLogoSidebar(CEO?.logo_url,CEO?.nombre);await refresh();await applyRoleUI()};
   if(CU&&(CU.rol==='Contador General'||CU.rol==='Contador Auxiliar')){
     if(listaEmps.length){CE=listaEmps[0].id;CEO=listaEmps[0];sel.value=CE}else{CE=null;CEO=null}
     sel.disabled=false;sel.title='Cambia entre las empresas que te han dado acceso';
@@ -1625,6 +1626,7 @@ async function loadEmpresas(){
   }else if(listaEmps.length){
     CE=listaEmps[0].id;CEO=listaEmps[0];sel.value=CE;sel.disabled=false;sel.title='';
   }
+  IVA_RATE=(CEO?.iva_porcentaje??12)/100;
   ['icOri','icDst','ic_ori','ic_dst'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=listaEmps.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join('')});
   if(CU){document.getElementById('uname').textContent=CU.nombre;document.getElementById('urole').textContent=CU.rol;document.getElementById('uav').textContent=CU.nombre[0].toUpperCase()}
   await loadDash();
@@ -2502,8 +2504,8 @@ async function loadServicios(){
     <td class="tr fw" style="padding:7px 6px">${fmt(s.monto)}</td>
     <td style="padding:7px 6px;text-align:center"><span class="badge ${s.estado==='Pagado'?'bg':'ba'}">${s.estado||'Pendiente'}</span></td>
     <td style="padding:7px 6px;display:flex;gap:4px">
-      ${s.estado!=='Pagado'?`<button class="btn bp bsm" onclick="pagarServicio(${s.id})">💳 Pagar</button>`:''}
-      <button class="btn bd bsm bic" onclick="delServicio(${s.id})">🗑</button>
+      ${s.estado!=='Pagado'?`<button class="btn bp bsm" onclick="pagarServicio('${s.id}')">💳 Pagar</button>`:''}
+      <button class="btn bd bsm bic" onclick="delServicio('${s.id}')">🗑</button>
     </td>
   </tr>`).join(''):'<tr><td colspan="6" class="te">Sin servicios registrados</td></tr>';
 }
@@ -2553,13 +2555,13 @@ function renderLineasProforma(){
     <td style="padding:4px;text-align:center"><button class="btn bd bsm bic" onclick="pfLineas.splice(${i},1);renderLineasProforma();calcTotalesPf()">✕</button></td>
   </tr>`).join('');calcTotalesPf();
 }
-function calcTotalesPf(){const sub=pfLineas.reduce((a,l)=>a+l.precio*l.cantidad,0);const iva=sub*0.12;document.getElementById('pf_sub').textContent=fmt(sub);document.getElementById('pf_iva').textContent=fmt(iva);document.getElementById('pf_tot').textContent=fmt(sub+iva);}
+function calcTotalesPf(){const sub=pfLineas.reduce((a,l)=>a+l.precio*l.cantidad,0);const iva=sub*IVA_RATE;document.getElementById('pf_sub').textContent=fmt(sub);document.getElementById('pf_iva').textContent=fmt(iva);document.getElementById('pf_tot').textContent=fmt(sub+iva);}
 async function fillCliSelPf(){if(!CE)return;const{data}=await supa.from('clientes').select('*').eq('empresa_id',CE).order('nombre');const cs=data||[];const s=document.getElementById('pf_cli');if(s)s.innerHTML='<option value="">Seleccionar cliente...</option>'+cs.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');}
 async function openMProforma(){document.getElementById('mProfTtl').textContent='Nueva proforma';document.getElementById('pf_id').value='';pfLineas=[];renderLineasProforma();document.getElementById('pf_fec').valueAsDate=new Date();const v=new Date();v.setDate(v.getDate()+30);document.getElementById('pf_valid').value=v.toISOString().slice(0,10);document.getElementById('pf_nota').value='';await fillCliSelPf();document.getElementById('mProforma').classList.add('open');}
 async function saveProforma(){
   if(!CE)return toast('Selecciona una empresa','er');
   const sub=pfLineas.reduce((a,l)=>a+(parseFloat(l.precio)||0)*(parseFloat(l.cantidad)||0),0);
-  const iva=sub*0.12;
+  const iva=sub*IVA_RATE;
   const total=sub+iva;
   const cliId=document.getElementById('pf_cli').value||null;
   const id=document.getElementById('pf_id').value;
@@ -2586,7 +2588,7 @@ async function delProforma(id){
 }
 async function imprimirProformaId(id){const{data:pf}=await supa.from('proformas').select('*').eq('id',id).maybeSingle();if(pf)imprimirProformaData(pf);}
 function imprimirProforma(){const tmp={lineas:pfLineas,subtotal:parseFloat(document.getElementById('pf_sub').textContent.replace(/[^0-9.]/g,''))||0};imprimirProformaData(tmp);}
-function imprimirProformaData(pf){const w=window.open('','_blank','width=700,height=800');if(!w)return;const emp=CEO||{};w.document.write(`<!DOCTYPE html><html><head><title>Proforma ${pf.numero||''}</title><style>body{font-family:Arial,sans-serif;font-size:13px;padding:30px;color:#111}.h{display:flex;justify-content:space-between;margin-bottom:20px}.t{width:100%;border-collapse:collapse}.t th{background:#f0f4f8;padding:8px;text-align:left;font-size:12px}.t td{padding:8px;border-bottom:1px solid #e5e7eb}.tot{text-align:right;margin-top:12px}@media print{@page{margin:15mm}}</style></head><body><div class="h"><div><strong style="font-size:18px">${emp.nombre||'EMPRESA'}</strong><br>RUC: ${emp.ruc||'—'}<br></div><div style="text-align:right"><strong style="font-size:16px">PROFORMA</strong><br>N°: ${pf.numero||'—'}<br>Fecha: ${pf.fecha||'—'}<br>Válida hasta: ${pf.valida_hasta||'—'}</div></div>${pf.nota?`<p style="font-size:12px;color:#555;margin-bottom:12px">${pf.nota}</p>`:''}<table class="t"><thead><tr><th>Descripción</th><th style="width:80px;text-align:center">Cant.</th><th style="width:100px;text-align:right">P.Unit.</th><th style="width:100px;text-align:right">Subtotal</th></tr></thead><tbody>${(pf.lineas||[]).map(l=>`<tr><td>${l.descripcion}</td><td style="text-align:center">${l.cantidad}</td><td style="text-align:right">$${(l.precio||0).toFixed(2)}</td><td style="text-align:right">$${(l.precio*l.cantidad).toFixed(2)}</td></tr>`).join('')}</tbody></table><div class="tot"><div>Subtotal: <strong>$${(pf.subtotal||0).toFixed(2)}</strong></div><div>IVA 12%: <strong>$${(pf.iva||0).toFixed(2)}</strong></div><div style="font-size:15px;font-weight:bold">TOTAL: $${(pf.total||0).toFixed(2)}</div></div></body></html>`);w.document.close();setTimeout(()=>w.print(),300);}
+function imprimirProformaData(pf){const w=window.open('','_blank','width=700,height=800');if(!w)return;const emp=CEO||{};w.document.write(`<!DOCTYPE html><html><head><title>Proforma ${pf.numero||''}</title><style>body{font-family:Arial,sans-serif;font-size:13px;padding:30px;color:#111}.h{display:flex;justify-content:space-between;margin-bottom:20px}.t{width:100%;border-collapse:collapse}.t th{background:#f0f4f8;padding:8px;text-align:left;font-size:12px}.t td{padding:8px;border-bottom:1px solid #e5e7eb}.tot{text-align:right;margin-top:12px}@media print{@page{margin:15mm}}</style></head><body><div class="h"><div><strong style="font-size:18px">${emp.nombre||'EMPRESA'}</strong><br>RUC: ${emp.ruc||'—'}<br></div><div style="text-align:right"><strong style="font-size:16px">PROFORMA</strong><br>N°: ${pf.numero||'—'}<br>Fecha: ${pf.fecha||'—'}<br>Válida hasta: ${pf.valida_hasta||'—'}</div></div>${pf.nota?`<p style="font-size:12px;color:#555;margin-bottom:12px">${pf.nota}</p>`:''}<table class="t"><thead><tr><th>Descripción</th><th style="width:80px;text-align:center">Cant.</th><th style="width:100px;text-align:right">P.Unit.</th><th style="width:100px;text-align:right">Subtotal</th></tr></thead><tbody>${(pf.lineas||[]).map(l=>`<tr><td>${l.descripcion}</td><td style="text-align:center">${l.cantidad}</td><td style="text-align:right">$${(l.precio||0).toFixed(2)}</td><td style="text-align:right">$${(l.precio*l.cantidad).toFixed(2)}</td></tr>`).join('')}</tbody></table><div class="tot"><div>Subtotal: <strong>$${(pf.subtotal||0).toFixed(2)}</strong></div><div>IVA: <strong>$${(pf.iva||0).toFixed(2)}</strong></div><div style="font-size:15px;font-weight:bold">TOTAL: $${(pf.total||0).toFixed(2)}</div></div></body></html>`);w.document.close();setTimeout(()=>w.print(),300);}
 async function convertirProformaFac(){const id=document.getElementById('pf_id').value;if(id)await convertirProformaFacId(id);}
 async function convertirProformaFacId(id){
   const{data:pf}=await supa.from('proformas').select('*').eq('id',id).maybeSingle();if(!pf)return;
@@ -2864,7 +2866,7 @@ async function saveStockMin(id,val){
   if(error){toast('No se pudo actualizar','er');return}
   toast('Stock mínimo actualizado','ok');
 }
-let posTurno=null,posCart=[],posPagos=[],posTipoDoc='NOTA_VENTA',posProductos=[];
+let posTurno=null,posCart=[],posPagos=[],posTipoDoc='NOTA_VENTA',posProductos=[],posIvaRateOverride=null;
 async function loadPOS(){
   posCart=[];posPagos=[];posTipoDoc='NOTA_VENTA';
   if(!CE)return;
@@ -2919,7 +2921,7 @@ function renderPosVenta(){
   <div class="card"><div class="cb" style="display:flex;flex-direction:column">
     <p style="font-size:12.5px;font-weight:600;color:var(--n6);margin:0 0 10px">🧾 Resumen de venta</p>
     <div class="bsr"><span style="color:var(--n5)">Subtotal</span><span id="pos_sub">$0.00</span></div>
-    <div class="bsr"><span style="color:var(--n5)">IVA 12%</span><span id="pos_iva">$0.00</span></div>
+    <div class="bsr" style="align-items:center"><span style="color:var(--n5);display:flex;align-items:center;gap:4px">IVA <input type="number" id="pos_iva_pct" step="0.01" min="0" max="100" style="width:50px;text-align:center;font-size:12px;height:22px;padding:1px 2px" onchange="posSetIvaOverride(this.value)">%</span><span id="pos_iva">$0.00</span></div>
     <div class="bsr" style="font-size:15px;font-weight:600;margin:8px 0;padding-top:8px;border-top:1px solid var(--n1)"><span>TOTAL</span><span id="pos_tot" style="color:var(--b6)">$0.00</span></div>
     <div class="div"></div>
     <div class="row" style="margin-bottom:8px">
@@ -2938,7 +2940,15 @@ function renderPosVenta(){
   </div></div>
 </div>`;
   posCatActiva='';
+  posIvaRateOverride=null;
+  const ivaInput=document.getElementById('pos_iva_pct');if(ivaInput)ivaInput.value=(IVA_RATE*100).toFixed(2);
   posRenderLista();
+  posActualizarTotales();
+}
+function posSetIvaOverride(v){
+  const pct=parseFloat(v);
+  posIvaRateOverride=(isNaN(pct)||pct<0||pct>100)?null:pct/100;
+  const ivaInput=document.getElementById('pos_iva_pct');if(ivaInput)ivaInput.value=(posIvaRateOverride??IVA_RATE)*100;
   posActualizarTotales();
 }
 let posCatActiva='';
@@ -2957,7 +2967,7 @@ function posBuscar(q){
   if(q&&busqEl&&itemsEl){
     const f=posProductos.filter(p=>{const catOk=!posCatActiva||(p.categoria||'General')===posCatActiva;const txtOk=(p.nombre||'').toLowerCase().includes(q)||(p.codigo||'').toLowerCase().includes(q);return catOk&&txtOk;});
     busqEl.style.display='block';
-    itemsEl.innerHTML=f.map(p=>`<div onclick="posAgregar(${p.id})" style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:var(--rs);cursor:pointer;border:0.5px solid var(--n2);${p.stock<=0?'opacity:.45;pointer-events:none':''}"><div><p style="margin:0;font-size:12.5px;font-weight:500">${p.nombre}</p><p style="margin:0;font-size:11px;color:var(--n5)">Stock: <span style="color:${p.stock<=0?'var(--er5)':p.stock<5?'var(--am5)':'var(--ok5)'}">${p.stock<=0?'Agotado':p.stock}</span></p></div><span style="font-size:13px;font-weight:600;color:var(--b6)">${fmt(p.precio)}</span></div>`).join('')||'<p style="font-size:12px;color:var(--n5);padding:8px">Sin resultados</p>';
+    itemsEl.innerHTML=f.map(p=>`<div onclick="posAgregar('${p.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:var(--rs);cursor:pointer;border:0.5px solid var(--n2);${p.stock<=0?'opacity:.45;pointer-events:none':''}"><div><p style="margin:0;font-size:12.5px;font-weight:500">${p.nombre}</p><p style="margin:0;font-size:11px;color:var(--n5)">Stock: <span style="color:${p.stock<=0?'var(--er5)':p.stock<5?'var(--am5)':'var(--ok5)'}">${p.stock<=0?'Agotado':p.stock}</span></p></div><span style="font-size:13px;font-weight:600;color:var(--b6)">${fmt(p.precio)}</span></div>`).join('')||'<p style="font-size:12px;color:var(--n5);padding:8px">Sin resultados</p>';
   }else if(busqEl)busqEl.style.display='none';
 }
 function posRenderLista(){
@@ -2998,7 +3008,7 @@ function posCantidad(idx,delta){
   posRenderCart();
 }
 function posQuitarItem(idx){posCart.splice(idx,1);posRenderCart()}
-function posTotales(){const sub=posCart.reduce((a,i)=>a+i.precio*i.cantidad,0);const iva=sub*0.12;const tot=sub+iva;return{sub,iva,tot}}
+function posTotales(){const sub=posCart.reduce((a,i)=>a+i.precio*i.cantidad,0);const rate=posIvaRateOverride??IVA_RATE;const iva=sub*rate;const tot=sub+iva;return{sub,iva,tot}}
 function posRenderCart(){posRenderLista();posActualizarTotales()}
 function posRenderTotales(sub,iva,tot){
   ['pos_sub','pos_iva','pos_tot'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=fmt([sub,iva,tot][i])});
@@ -3123,7 +3133,7 @@ async function posImprimirTicket(f){
     </div>
     <div style="border-top:1px dashed #999;padding-top:6px;margin-bottom:6px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Subtotal</span><span>${fmt(f.subtotal)}</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>IVA 12%</span><span>${fmt(f.iva)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>IVA</span><span>${fmt(f.iva)}</span></div>
       <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:bold;border-top:1px solid #111;padding-top:4px"><span>TOTAL</span><span>${fmt(f.total)}</span></div>
     </div>
     <div style="border-top:1px dashed #999;padding-top:6px;margin-bottom:8px">
@@ -3215,7 +3225,7 @@ async function posConfirmarDevolucion(){
   const{error:devErr}=await supa.from('pos_devoluciones').insert({empresa_id:CE,venta_id:f.id,turno_id:f.turno_id,fecha:new Date().toISOString(),items:itemsDev,motivo:(document.getElementById('dev_motivo').value||'').trim(),usuario:(CU&&CU.nombre)||'—',monto_devuelto:montoDev,metodo_reembolso:metodoReembolso});
   if(devErr){toast('Error al registrar la devolución: '+devErr.message,'er');return}
   const baseDev=itemsDev.reduce((a,i)=>a+i.precio*i.cantidad,0);
-  const ivaDev=baseDev*0.12;
+  const ivaDev=baseDev*IVA_RATE;
   const costoDev=itemsDev.reduce((a,i)=>a+(i.costo||0)*i.cantidad,0);
   await postearCuenta('4.1.01',baseDev,0);
   await postearCuenta('2.1.02',ivaDev,0);
@@ -3227,7 +3237,7 @@ async function posConfirmarDevolucion(){
 async function fillProdSel(sel){if(!CE)return;const{data}=await supa.from('productos').select('*').eq('empresa_id',CE).order('nombre');const ps=data||[];sel.innerHTML='<option value="">Seleccionar...</option>'+ps.map(p=>`<option value="${p.id}" data-p="${p.precio}">${p.nombre} ($${p.precio.toFixed(2)})</option>`).join('')}
 function addLF(){const c=document.getElementById('lcFac');const d=document.createElement('div');d.className='laf';d.innerHTML=`<select class="fc psel" style="font-size:12.5px" onchange="afp(this);calcTF()"><option>Seleccionar...</option></select><input type="number" value="1" min="1" class="fc qin" oninput="calcTF()"><input type="number" step="0.01" placeholder="0.00" class="fc prin" oninput="calcTF()"><input type="number" step="0.01" class="fc tlin" readonly style="background:var(--n0)"><button type="button" class="rlb" onclick="this.closest('.laf').remove();calcTF()">✕</button>`;c.appendChild(d);fillProdSel(d.querySelector('.psel'))}
 function afp(sel){const o=sel.options[sel.selectedIndex];if(o.dataset.p)sel.closest('.laf').querySelector('.prin').value=parseFloat(o.dataset.p).toFixed(2)}
-function calcTF(){let sub=0;document.querySelectorAll('#lcFac .laf').forEach(l=>{const q=parseFloat(l.querySelector('.qin').value)||0,p=parseFloat(l.querySelector('.prin').value)||0,t=q*p;l.querySelector('.tlin').value=t.toFixed(2);sub+=t});const iva=sub*0.12,tot=sub+iva;document.getElementById('f_sub').textContent=fmt(sub);document.getElementById('f_iva').textContent=fmt(iva);document.getElementById('f_tot').textContent=fmt(tot);return{sub,iva,tot}}
+function calcTF(){let sub=0;document.querySelectorAll('#lcFac .laf').forEach(l=>{const q=parseFloat(l.querySelector('.qin').value)||0,p=parseFloat(l.querySelector('.prin').value)||0,t=q*p;l.querySelector('.tlin').value=t.toFixed(2);sub+=t});const iva=sub*IVA_RATE,tot=sub+iva;document.getElementById('f_sub').textContent=fmt(sub);document.getElementById('f_iva').textContent=fmt(iva);document.getElementById('f_tot').textContent=fmt(tot);return{sub,iva,tot}}
 async function saveFac(){
   if(!CE)return toast('Selecciona una empresa','er');
   const cli=document.getElementById('f_cli').value;const fec=document.getElementById('f_fec').value;
@@ -3291,7 +3301,7 @@ async function pdfFac(id){
   }
   y+=5;doc.setLineWidth(0.3);doc.line(15,y,195,y);y+=10;
   doc.setFontSize(10);doc.text(`Subtotal: ${fmt(f.subtotal)}`,125,y);y+=7;
-  doc.text(`IVA 12%: ${fmt(f.iva)}`,125,y);y+=11;
+  doc.text(`IVA: ${fmt(f.iva)}`,125,y);y+=11;
   doc.setFontSize(12);doc.setFont(undefined,'bold');doc.setTextColor(30,86,168);
   doc.text(`TOTAL: ${fmt(f.total)}`,125,y);
   doc.setFontSize(8);doc.setTextColor(120);doc.setFont(undefined,'normal');
@@ -3871,9 +3881,10 @@ async function delUsuario(id){
 }
 async function loadMiEmpresa(){
   if(!CE)return;
-  const{data:e}=await supa.from('empresas').select('nombre,logo_url').eq('id',CE).maybeSingle();
+  const{data:e}=await supa.from('empresas').select('nombre,logo_url,iva_porcentaje').eq('id',CE).maybeSingle();
   if(!e)return;
   document.getElementById('me_nom').value=e.nombre||'';
+  document.getElementById('me_iva').value=e.iva_porcentaje??12;
   const prev=document.getElementById('me_logo_preview');
   if(e.logo_url){prev.src=e.logo_url;prev.style.display='block'}else{prev.style.display='none'}
   aplicarLogoSidebar(e.logo_url,e.nombre);
@@ -3888,6 +3899,8 @@ function aplicarLogoSidebar(logoUrl,nombre){
 async function saveMiEmpresa(){
   const nombre=document.getElementById('me_nom').value.trim();
   if(!nombre)return toast('El nombre es requerido','er');
+  const ivaPct=parseFloat(document.getElementById('me_iva').value);
+  if(isNaN(ivaPct)||ivaPct<0||ivaPct>100)return toast('El % de IVA debe estar entre 0 y 100','er');
   const fileInput=document.getElementById('me_logo_file');
   const file=fileInput.files[0];
   const btn=document.querySelector('#miEmpresaBox .bp');
@@ -3903,8 +3916,10 @@ async function saveMiEmpresa(){
       const{data:pub}=supa.storage.from('logos').getPublicUrl(path);
       logoUrl=pub.publicUrl+'?t='+Date.now();
     }
-    const{error}=await supa.rpc('actualizar_mi_empresa',{p_nombre:nombre,p_logo_url:logoUrl});
+    const{error}=await supa.rpc('actualizar_mi_empresa',{p_nombre:nombre,p_logo_url:logoUrl,p_iva_porcentaje:ivaPct});
     if(error)throw error;
+    IVA_RATE=ivaPct/100;
+    if(CEO)CEO.iva_porcentaje=ivaPct;
     toast('Empresa actualizada','ok');
     fileInput.value='';
     await loadMiEmpresa();
@@ -3918,15 +3933,18 @@ async function saveMiEmpresa(){
 async function editEmpresa(id){
   const{data:e,error}=await supa.from('empresas').select('*').eq('id',id).maybeSingle();
   if(error||!e)return toast('No se pudo cargar la empresa','er');
-  document.getElementById('mEmpresaTtl').textContent='Editar Empresa';document.getElementById('em_id').value=e.id;document.getElementById('em_nom').value=e.nombre;document.getElementById('em_ruc').value=e.ruc;document.getElementById('em_mon').value=e.moneda||'USD';document.getElementById('em_reg').value=e.regimen||'General';document.getElementById('em_est').value=e.estado||'Activa';document.getElementById('mEmpresa').classList.add('open');
+  document.getElementById('mEmpresaTtl').textContent='Editar Empresa';document.getElementById('em_id').value=e.id;document.getElementById('em_nom').value=e.nombre;document.getElementById('em_ruc').value=e.ruc;document.getElementById('em_mon').value=e.moneda||'USD';document.getElementById('em_reg').value=e.regimen||'General';document.getElementById('em_est').value=e.estado||'Activa';document.getElementById('em_iva').value=e.iva_porcentaje??12;document.getElementById('mEmpresa').classList.add('open');
 }
 async function saveEmpresa(){
   const id=document.getElementById('em_id').value;
   const n=document.getElementById('em_nom').value.trim();
   if(!n)return toast('Nombre requerido','er');
-  const data={nombre:n,ruc:document.getElementById('em_ruc').value.trim(),moneda:document.getElementById('em_mon').value,regimen:document.getElementById('em_reg').value,estado:document.getElementById('em_est').value};
+  const ivaPct=parseFloat(document.getElementById('em_iva').value);
+  if(isNaN(ivaPct)||ivaPct<0||ivaPct>100)return toast('El % de IVA debe estar entre 0 y 100','er');
+  const data={nombre:n,ruc:document.getElementById('em_ruc').value.trim(),moneda:document.getElementById('em_mon').value,regimen:document.getElementById('em_reg').value,estado:document.getElementById('em_est').value,iva_porcentaje:ivaPct};
   const{error}=id?await supa.from('empresas').update(data).eq('id',id):await supa.from('empresas').insert(data);
   if(error){toast('Error al guardar la empresa: '+error.message,'er');return}
+  if(id===CE){IVA_RATE=ivaPct/100;if(CEO)CEO.iva_porcentaje=ivaPct}
   closeM('mEmpresa');toast(id?'Empresa actualizada':'Empresa creada','ok');await loadAdmin();await loadEmpresas();
 }
 async function delEmpresa(id){
@@ -4266,7 +4284,7 @@ async function delCompra(id){
 }
 function calcCompra(){
   const biva=parseFloat(document.getElementById('mc_biva').value)||0;
-  document.getElementById('mc_iva').value=(biva*0.12).toFixed(2);
+  document.getElementById('mc_iva').value=(biva*IVA_RATE).toFixed(2);
   const b0=parseFloat(document.getElementById('mc_b0').value)||0;
   const iv=parseFloat(document.getElementById('mc_iva').value)||0;
   document.getElementById('mc_tot').value=(b0+biva+iv).toFixed(2);
