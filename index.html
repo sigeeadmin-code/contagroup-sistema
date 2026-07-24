@@ -936,7 +936,7 @@ table.t tbody tr:hover{background:var(--b0)}
 
 <div class="mo" id="mEmp"><div class="mb"><div class="mh"><h3>👤 <span id="mEmpTtl">Nuevo Empleado</span></h3><button class="mx" onclick="closeM('mEmp')">✕</button></div><div class="mc"><input type="hidden" id="e_id"><div class="g2"><div class="fg"><label class="fl2">Nombre</label><input type="text" id="e_nom" class="fc"></div><div class="fg"><label class="fl2">Cédula</label><input type="text" id="e_ced" class="fc" maxlength="10"></div></div><div class="g2"><div class="fg"><label class="fl2">Cargo</label><input type="text" id="e_car" class="fc"></div><div class="fg"><label class="fl2">Salario</label><input type="number" step="0.01" id="e_sal" class="fc"></div></div><div class="fg"><label class="fl2">Fecha ingreso</label><input type="date" id="e_ing" class="fc"></div></div><div class="mf"><button class="btn bo" onclick="closeM('mEmp')">Cancelar</button><button class="btn bp" onclick="saveEmp()">💾 Guardar</button></div></div></div>
 
-<div class="mo" id="mProd"><div class="mb"><div class="mh"><h3>📦 <span id="mProdTtl">Nuevo Producto</span></h3><button class="mx" onclick="closeM('mProd')">✕</button></div><div class="mc"><input type="hidden" id="p_id"><div class="g2"><div class="fg"><label class="fl2">Código</label><input type="text" id="p_cod" class="fc" placeholder="P001"></div><div class="fg"><label class="fl2">Nombre</label><input type="text" id="p_nom" class="fc"></div></div><div class="g2"><div class="fg"><label class="fl2">Categoría</label><input type="text" id="p_cat" class="fc" list="p_cat_list" placeholder="Ej. Bebidas, Electrónica..."><datalist id="p_cat_list"></datalist></div><div></div></div><div class="g3"><div class="fg"><label class="fl2">Precio</label><input type="number" step="0.01" id="p_pre" class="fc" placeholder="0.00"></div><div class="fg"><label class="fl2">Costo</label><input type="number" step="0.01" id="p_cos" class="fc" placeholder="0.00"></div><div class="fg"><label class="fl2">Stock</label><input type="number" id="p_stk" class="fc" placeholder="0"></div></div>
+<div class="mo" id="mProd"><div class="mb"><div class="mh"><h3>📦 <span id="mProdTtl">Nuevo Producto</span></h3><button class="mx" onclick="closeM('mProd')">✕</button></div><div class="mc"><input type="hidden" id="p_id"><div style="display:flex;gap:14px;align-items:center;margin-bottom:6px"><img id="p_img_preview" src="" alt="" style="width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--n1);display:none;border:1px solid var(--n2)"><div id="p_img_placeholder" style="width:64px;height:64px;border-radius:10px;background:var(--n1);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--n4);border:1px solid var(--n2)">📦</div><div class="fg" style="flex:1;margin-bottom:0"><label class="fl2">Imagen del producto</label><input type="file" id="p_img_file" accept="image/png,image/jpeg,image/webp" class="fc" onchange="previewImagenProd(this)"></div></div><div class="g2"><div class="fg"><label class="fl2">Código</label><input type="text" id="p_cod" class="fc" placeholder="P001"></div><div class="fg"><label class="fl2">Nombre</label><input type="text" id="p_nom" class="fc"></div></div><div class="g2"><div class="fg"><label class="fl2">Categoría</label><input type="text" id="p_cat" class="fc" list="p_cat_list" placeholder="Ej. Bebidas, Electrónica..."><datalist id="p_cat_list"></datalist></div><div></div></div><div class="g3"><div class="fg"><label class="fl2">Precio</label><input type="number" step="0.01" id="p_pre" class="fc" placeholder="0.00"></div><div class="fg"><label class="fl2">Costo</label><input type="number" step="0.01" id="p_cos" class="fc" placeholder="0.00"></div><div class="fg"><label class="fl2">Stock</label><input type="number" id="p_stk" class="fc" placeholder="0"></div></div>
   <div class="div"></div>
   <div style="font-size:11.5px;color:var(--b6);margin-bottom:8px;font-weight:500">📦 Control de stock y Kardex</div>
   <div class="g3"><div class="fg"><label class="fl2">Stock mínimo (alerta)</label><input type="number" id="p_min" class="fc" placeholder="0" value="0"></div><div class="fg"><label class="fl2">Stock máximo</label><input type="number" id="p_max" class="fc" placeholder="0"></div><div class="fg"><label class="fl2">Método Kardex</label><select id="p_metodo" class="fc"><option value="Promedio">Promedio pond.</option><option value="PEPS">PEPS</option><option value="UEPS">UEPS</option></select></div></div>
@@ -1078,6 +1078,16 @@ table.t tbody tr:hover{background:var(--b0)}
   <button class="btn bp" onclick="saveProforma()">💾 Guardar</button>
   <button class="btn" style="background:var(--ok5);color:white" onclick="convertirProformaFac()">→ Convertir a Factura/NV</button>
 </div></div></div>
+
+<div class="mo" id="mBuscarProforma"><div class="mb" style="max-width:600px">
+  <div class="mh"><h3>📋 Buscar Proforma</h3><button class="mx" onclick="closeM('mBuscarProforma')">✕</button></div>
+  <div class="mc">
+    <div style="display:flex;align-items:center;gap:6px;border:1px solid var(--n2);border-radius:var(--rm);padding:0 12px;margin-bottom:14px">
+      <span>🔍</span><input type="text" id="bp_q" class="fc" placeholder="Buscar por número o cliente..." oninput="filtrarProformasPOS(this.value)" style="border:none;background:transparent;flex:1;font-size:13.5px;height:40px" autofocus>
+    </div>
+    <div id="bp_lista" style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div></div>
 
 <div class="mo" id="mClienteRapido"><div class="mb" style="max-width:400px"><div class="mh"><h3>👤 Nuevo cliente rápido</h3><button class="mx" onclick="closeM('mClienteRapido')">✕</button></div><div class="mc">
   <div class="fg"><label class="fl2">Nombre / Razón social</label><input type="text" id="cr_nom" class="fc"></div>
@@ -1387,7 +1397,7 @@ table.t tbody tr:hover{background:var(--b0)}
       <button class="btn bo" onclick="openM('mMovInventario');document.getElementById('mi_tipo').value='entrada'">+ Entrada</button>
       <button class="btn bo" onclick="openM('mMovInventario');document.getElementById('mi_tipo').value='salida'">- Salida</button>
       <button class="btn bo" onclick="openM('mMovInventario');document.getElementById('mi_tipo').value='ajuste'">⚖ Ajuste</button>
-      <button class="btn bp" onclick="openM('mProd');document.getElementById('p_id').value='';['p_cod','p_nom','p_pre','p_cos','p_stk','p_min','p_ubicacion','p_ref'].forEach(x=>{const el=document.getElementById(x);if(el)el.value=''});document.getElementById('mProdTtl').textContent='Nuevo Producto'">+ Producto</button>
+      <button class="btn bp" onclick="openM('mProd');document.getElementById('p_id').value='';['p_cod','p_nom','p_cat','p_pre','p_cos','p_stk','p_min','p_ubicacion','p_ref'].forEach(x=>{const el=document.getElementById(x);if(el)el.value=''});document.getElementById('p_img_file').value='';document.getElementById('p_img_preview').style.display='none';document.getElementById('p_img_placeholder').style.display='flex';document.getElementById('mProdTtl').textContent='Nuevo Producto'">+ Producto</button>
     </div>
   </div>
 
@@ -2604,18 +2614,23 @@ function imprimirProformaData(pf){const w=window.open('','_blank','width=700,hei
 async function convertirProformaFac(){const id=document.getElementById('pf_id').value;if(id)await convertirProformaFacId(id);}
 async function convertirProformaFacId(id){
   const{data:pf}=await supa.from('proformas').select('*').eq('id',id).maybeSingle();if(!pf)return;
-  if(!confirm('¿Convertir esta proforma en Factura / Nota de Venta?'))return;
-  await supa.from('proformas').update({estado:'Convertida'}).eq('id',id);
+  if(!confirm('¿Cargar esta proforma en el Punto de Venta para facturarla?'))return;
   const idsProductos=[...new Set((pf.lineas||[]).map(l=>l.producto_id).filter(Boolean))];
   let costosMap={};
   if(idsProductos.length){
     const{data:prods}=await supa.from('productos').select('id,costo').in('id',idsProductos);
     costosMap=Object.fromEntries((prods||[]).map(p=>[p.id,p.costo||0]));
   }
-  posCart=pf.lineas.map(l=>({producto_id:l.producto_id||null,nombre:l.descripcion,precio:l.precio,costo:l.producto_id?(costosMap[l.producto_id]||0):0,cantidad:l.cantidad}));
-  posTipoDoc='NOTA_VENTA';
   closeM('mProforma');
   await nav('pos');
+  if(!posTurno){toast('Debes abrir la caja del POS antes de cargar la proforma','er');return}
+  posCart=pf.lineas.map(l=>({producto_id:l.producto_id||null,nombre:l.descripcion,precio:l.precio,costo:l.producto_id?(costosMap[l.producto_id]||0):0,cantidad:l.cantidad}));
+  posProformaOrigenId=pf.id;
+  posSetTipoDoc(pf.cliente_id?'FACTURA':'NOTA_VENTA');
+  if(pf.cliente_id){setTimeout(()=>{const s=document.getElementById('pos_cliente');if(s)s.value=pf.cliente_id},80)}
+  posRenderCart();
+  const banner=document.getElementById('pos_proforma_banner');
+  if(banner)banner.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;background:var(--b1);border:1px solid var(--b3);border-radius:var(--rm);padding:8px 12px;margin-bottom:10px"><span style="font-size:12.5px;color:var(--b7)">📋 Cargado desde proforma <strong>${pf.numero}</strong> — al confirmar la venta se marcará como convertida</span><button class="btn bo bsm" onclick="quitarProformaOrigenPOS()">Quitar</button></div>`;
   toast('Proforma cargada en el POS — revisa y confirma la venta','ok');
 }
 
@@ -2884,7 +2899,7 @@ async function saveStockMin(id,val){
   if(error){toast('No se pudo actualizar','er');return}
   toast('Stock mínimo actualizado','ok');
 }
-let posTurno=null,posCart=[],posPagos=[],posTipoDoc='NOTA_VENTA',posProductos=[],posIvaRateOverride=null;
+let posTurno=null,posCart=[],posPagos=[],posTipoDoc='NOTA_VENTA',posProductos=[],posIvaRateOverride=null,posProformaOrigenId=null,posProformasCache=[];
 async function loadPOS(){
   posCart=[];posPagos=[];posTipoDoc='NOTA_VENTA';
   if(!CE)return;
@@ -2910,11 +2925,13 @@ function renderPosVenta(){
   const cats=[...new Set(posProductos.map(p=>p.categoria||'General'))];
   document.getElementById('posBody').innerHTML=`<div style="display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start">
   <div class="card"><div class="cb">
+    <div id="pos_proforma_banner"></div>
     <div style="display:flex;gap:8px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:6px;flex:1;border:1px solid var(--n2);border-radius:var(--rm);padding:0 10px">
         <span>🔍</span><input type="text" id="pos_q" class="fc" placeholder="Buscar producto o escanear código..." oninput="posBuscar(this.value)" style="border:none;background:transparent;flex:1;font-size:13px;height:34px" autofocus>
       </div>
       <button class="btn bo" style="padding:0 12px;white-space:nowrap" onclick="abrirScanner('pos')">📷 Escanear</button>
+      <button class="btn bo" style="padding:0 12px;white-space:nowrap" onclick="abrirBuscadorProforma()">📋 Proforma</button>
     </div>
     <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap" id="pos_cats">
       <button class="btn bp bsm" onclick="posFiltrarCat('',this)">Todos</button>
@@ -2959,6 +2976,7 @@ function renderPosVenta(){
 </div>`;
   posCatActiva='';
   posIvaRateOverride=null;
+  posProformaOrigenId=null;
   const ivaInput=document.getElementById('pos_iva_pct');if(ivaInput)ivaInput.value=(IVA_RATE*100).toFixed(2);
   posRenderLista();
   posActualizarTotales();
@@ -2985,7 +3003,7 @@ function posBuscar(q){
   if(q&&busqEl&&itemsEl){
     const f=posProductos.filter(p=>{const catOk=!posCatActiva||(p.categoria||'General')===posCatActiva;const txtOk=(p.nombre||'').toLowerCase().includes(q)||(p.codigo||'').toLowerCase().includes(q);return catOk&&txtOk;});
     busqEl.style.display='block';
-    itemsEl.innerHTML=f.map(p=>`<div onclick="posAgregar('${p.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:var(--rs);cursor:pointer;border:0.5px solid var(--n2);${p.stock<=0?'opacity:.45;pointer-events:none':''}"><div><p style="margin:0;font-size:12.5px;font-weight:500">${p.nombre}</p><p style="margin:0;font-size:11px;color:var(--n5)">Stock: <span style="color:${p.stock<=0?'var(--er5)':p.stock<5?'var(--am5)':'var(--ok5)'}">${p.stock<=0?'Agotado':p.stock}</span></p></div><span style="font-size:13px;font-weight:600;color:var(--b6)">${fmt(p.precio)}</span></div>`).join('')||'<p style="font-size:12px;color:var(--n5);padding:8px">Sin resultados</p>';
+    itemsEl.innerHTML=f.map(p=>`<div onclick="posAgregar('${p.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:var(--rs);cursor:pointer;border:0.5px solid var(--n2);${p.stock<=0?'opacity:.45;pointer-events:none':''}"><div style="display:flex;align-items:center;gap:8px">${p.imagen_url?`<img src="${p.imagen_url}" alt="" style="width:32px;height:32px;border-radius:6px;object-fit:cover;flex-shrink:0">`:'<div style="width:32px;height:32px;border-radius:6px;background:var(--n1);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--n4);flex-shrink:0">📦</div>'}<div><p style="margin:0;font-size:12.5px;font-weight:500">${p.nombre}</p><p style="margin:0;font-size:11px;color:var(--n5)">Stock: <span style="color:${p.stock<=0?'var(--er5)':p.stock<5?'var(--am5)':'var(--ok5)'}">${p.stock<=0?'Agotado':p.stock}</span></p></div></div><span style="font-size:13px;font-weight:600;color:var(--b6)">${fmt(p.precio)}</span></div>`).join('')||'<p style="font-size:12px;color:var(--n5);padding:8px">Sin resultados</p>';
   }else if(busqEl)busqEl.style.display='none';
 }
 function posRenderLista(){
@@ -3100,6 +3118,7 @@ async function posConfirmarVenta(){
   await postearCuenta('4.1.01',0,sub);await postearCuenta('2.1.02',0,iva);
   const costoTotal=posCart.reduce((a,i)=>a+(i.costo||0)*i.cantidad,0);
   if(costoTotal>0){await postearCuenta('5.1.01',costoTotal,0);await postearCuenta('1.2.01',0,costoTotal)}
+  if(posProformaOrigenId){await supa.from('proformas').update({estado:'Convertida'}).eq('id',posProformaOrigenId)}
   // --- Imprimir ANTES de limpiar para que el modal se abra con los datos ---
   await posImprimirTicket({...facData,id:facId});
   // --- Limpiar y reiniciar pantalla de venta ---
@@ -3126,6 +3145,64 @@ async function posGenerarProforma(){
   posCart=[];posPagos=[];posTipoDoc='NOTA_VENTA';
   renderPosVenta();
   toast(`✓ Proforma ${numero} generada — válida ${dias} día(s)`,'ok');
+}
+
+/* BUSCADOR DE PROFORMAS EN EL POS */
+async function abrirBuscadorProforma(){
+  if(!CE)return toast('Selecciona una empresa','er');
+  document.getElementById('bp_q').value='';
+  const{data}=await supa.from('proformas').select('*').eq('empresa_id',CE).neq('estado','Convertida').order('created_at',{ascending:false});
+  const{data:clisD}=await supa.from('clientes').select('id,nombre').eq('empresa_id',CE);
+  const clm=Object.fromEntries((clisD||[]).map(c=>[c.id,c.nombre]));
+  posProformasCache=(data||[]).map(p=>({...p,clienteNombre:clm[p.cliente_id]||'Sin cliente asignado'}));
+  renderListaProformasPOS(posProformasCache);
+  openM('mBuscarProforma');
+}
+function filtrarProformasPOS(q){
+  q=(q||'').toLowerCase().trim();
+  const f=!q?posProformasCache:posProformasCache.filter(p=>(p.numero||'').toLowerCase().includes(q)||(p.clienteNombre||'').toLowerCase().includes(q));
+  renderListaProformasPOS(f);
+}
+function renderListaProformasPOS(lista){
+  const box=document.getElementById('bp_lista');
+  if(!lista.length){box.innerHTML='<p style="text-align:center;color:var(--n4);font-size:13px;padding:30px 0">No hay proformas pendientes</p>';return}
+  const hoy=new Date().toISOString().slice(0,10);
+  box.innerHTML=lista.map(p=>{
+    const vencida=p.valida_hasta&&p.valida_hasta<hoy;
+    return`<div onclick="cargarProformaEnPOS('${p.id}')" style="border:1px solid var(--n2);border-radius:var(--rm);padding:12px 14px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--b5)';this.style.background='var(--b1)'" onmouseout="this.style.borderColor='var(--n2)';this.style.background='transparent'">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span class="fw fm" style="font-size:13px;color:var(--b6)">${p.numero}</span>
+        <span class="badge ${vencida?'br':'bg'}">${vencida?'⏰ Vencida':'✓ Vigente'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><p style="margin:0;font-size:13px;font-weight:600">${p.clienteNombre}</p><p style="margin:2px 0 0;font-size:11px;color:var(--n5)">${(p.lineas||[]).length} línea(s) · válida hasta ${p.valida_hasta||'—'}</p></div>
+        <span style="font-size:15px;font-weight:700;color:var(--ok5)">${fmt(p.total||0)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function cargarProformaEnPOS(id){
+  const pf=posProformasCache.find(p=>p.id===id);if(!pf)return;
+  const idsProductos=[...new Set((pf.lineas||[]).map(l=>l.producto_id).filter(Boolean))];
+  let costosMap={};
+  if(idsProductos.length){
+    const{data:prods}=await supa.from('productos').select('id,costo').in('id',idsProductos);
+    costosMap=Object.fromEntries((prods||[]).map(p=>[p.id,p.costo||0]));
+  }
+  posCart=(pf.lineas||[]).map(l=>({producto_id:l.producto_id||null,nombre:l.descripcion,precio:l.precio,costo:l.producto_id?(costosMap[l.producto_id]||0):0,cantidad:l.cantidad}));
+  posProformaOrigenId=pf.id;
+  closeM('mBuscarProforma');
+  posSetTipoDoc(pf.cliente_id?'FACTURA':'NOTA_VENTA');
+  if(pf.cliente_id){setTimeout(()=>{const s=document.getElementById('pos_cliente');if(s)s.value=pf.cliente_id},80)}
+  posRenderCart();
+  const banner=document.getElementById('pos_proforma_banner');
+  if(banner)banner.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;background:var(--b1);border:1px solid var(--b3);border-radius:var(--rm);padding:8px 12px;margin-bottom:10px"><span style="font-size:12.5px;color:var(--b7)">📋 Cargado desde proforma <strong>${pf.numero}</strong> — al confirmar la venta se marcará como convertida</span><button class="btn bo bsm" onclick="quitarProformaOrigenPOS()">Quitar</button></div>`;
+  toast(`Proforma ${pf.numero} cargada — revisa y confirma la venta`,'ok');
+}
+function quitarProformaOrigenPOS(){
+  posProformaOrigenId=null;
+  const banner=document.getElementById('pos_proforma_banner');if(banner)banner.innerHTML='';
+  toast('Proforma desvinculada de esta venta','wn');
 }
 async function posImprimirTicket(f){
   if(!f){return}
@@ -3600,6 +3677,9 @@ async function editProd(id){
   document.getElementById('p_pre').value=p.precio;
   document.getElementById('p_cos').value=p.costo||0;
   document.getElementById('p_stk').value=p.stock||0;
+  document.getElementById('p_img_file').value='';
+  const prev=document.getElementById('p_img_preview'),ph=document.getElementById('p_img_placeholder');
+  if(p.imagen_url){prev.src=p.imagen_url;prev.style.display='block';ph.style.display='none'}else{prev.style.display='none';ph.style.display='flex'}
   if(document.getElementById('p_min'))document.getElementById('p_min').value=p.stock_min||0;
   if(document.getElementById('p_max'))document.getElementById('p_max').value=p.stock_max||0;
   if(document.getElementById('p_metodo'))document.getElementById('p_metodo').value=p.metodo_kardex||'Promedio';
@@ -3612,15 +3692,42 @@ async function editProd(id){
   if(document.getElementById('p_gramos'))document.getElementById('p_gramos').value=p.gramos_azucar||0;
   document.getElementById('mProd').classList.add('open');
 }
+function previewImagenProd(input){
+  const file=input.files[0];if(!file)return;
+  const prev=document.getElementById('p_img_preview'),ph=document.getElementById('p_img_placeholder');
+  const reader=new FileReader();
+  reader.onload=e=>{prev.src=e.target.result;prev.style.display='block';ph.style.display='none'};
+  reader.readAsDataURL(file);
+}
 async function saveProd(){
   if(!CE)return toast('Selecciona una empresa','er');
   const id=document.getElementById('p_id').value;
   const n=document.getElementById('p_nom').value.trim();
   if(!n)return toast('Nombre requerido','er');
-  const data={empresa_id:CE,codigo:document.getElementById('p_cod').value.trim()||'P-AUTO',nombre:n,categoria:document.getElementById('p_cat').value.trim()||'General',precio:parseFloat(document.getElementById('p_pre').value)||0,costo:parseFloat(document.getElementById('p_cos').value)||0,stock:parseFloat(document.getElementById('p_stk').value)||0,stock_min:parseFloat(document.getElementById('p_min')?.value)||0,stock_max:parseFloat(document.getElementById('p_max')?.value)||0,metodo_kardex:document.getElementById('p_metodo')?.value||'Promedio',ubicacion:document.getElementById('p_ubicacion')?.value.trim()||'',referencia:document.getElementById('p_ref')?.value.trim()||'',codigo_ice:document.getElementById('p_ice')?.value||null,tipo_venta_ice:document.getElementById('p_ice_venta')?.value||'1-LOCAL',gramos_azucar:parseFloat(document.getElementById('p_gramos')?.value)||0};
-  const{error}=id?await supa.from('productos').update(data).eq('id',id):await supa.from('productos').insert(data);
-  if(error){toast(error.code==='23505'?'Ya existe un producto con ese código':'Error al guardar: '+error.message,'er');return}
-  closeM('mProd');toast(id?'Actualizado':'Registrado','ok');await loadInv();
+  const btn=document.querySelector('#mProd .bp');if(btn){btn.disabled=true;btn.textContent='Guardando...'}
+  try{
+    let imagenUrl=null;
+    const file=document.getElementById('p_img_file').files[0];
+    if(file){
+      if(file.size>3*1024*1024)throw new Error('La imagen no puede pesar más de 3MB');
+      const ext=file.name.split('.').pop().toLowerCase();
+      const path=`${CE}/prod-${id||'nuevo'}-${Date.now()}.${ext}`;
+      const{error:upErr}=await supa.storage.from('productos-imagenes').upload(path,file,{upsert:true,cacheControl:'3600'});
+      if(upErr)throw upErr;
+      const{data:pub}=supa.storage.from('productos-imagenes').getPublicUrl(path);
+      imagenUrl=pub.publicUrl;
+    }
+    const data={empresa_id:CE,codigo:document.getElementById('p_cod').value.trim()||'P-AUTO',nombre:n,categoria:document.getElementById('p_cat').value.trim()||'General',precio:parseFloat(document.getElementById('p_pre').value)||0,costo:parseFloat(document.getElementById('p_cos').value)||0,stock:parseFloat(document.getElementById('p_stk').value)||0,stock_min:parseFloat(document.getElementById('p_min')?.value)||0,stock_max:parseFloat(document.getElementById('p_max')?.value)||0,metodo_kardex:document.getElementById('p_metodo')?.value||'Promedio',ubicacion:document.getElementById('p_ubicacion')?.value.trim()||'',referencia:document.getElementById('p_ref')?.value.trim()||'',codigo_ice:document.getElementById('p_ice')?.value||null,tipo_venta_ice:document.getElementById('p_ice_venta')?.value||'1-LOCAL',gramos_azucar:parseFloat(document.getElementById('p_gramos')?.value)||0};
+    if(imagenUrl)data.imagen_url=imagenUrl;
+    const{error}=id?await supa.from('productos').update(data).eq('id',id):await supa.from('productos').insert(data);
+    if(error){toast(error.code==='23505'?'Ya existe un producto con ese código':'Error al guardar: '+error.message,'er');return}
+    closeM('mProd');toast(id?'Actualizado':'Registrado','ok');await loadInv();
+  }catch(e){
+    console.error('Error al guardar producto:',e);
+    toast('Error: '+e.message,'er');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='💾 Guardar'}
+  }
 }
 async function delProd(id){
   if(!confirm('¿Eliminar producto?'))return;
@@ -4931,7 +5038,7 @@ async function loadInv(){
     const pct=p.stock_min>0?Math.min(100,Math.round((p.stock||0)/Math.max(p.stock_min*2,1)*100)):Math.min(100,((p.stock||0)/300)*100);
     const cl=pct<30?'lw':pct<60?'wn':'';
     const alerta=(p.stock||0)<=(p.stock_min||0)&&p.stock_min>0?'<span class="badge br">Crítico</span>':'';
-    return`<tr><td class="fm fw" style="font-size:11.5px">${p.codigo}</td><td>${p.nombre}${alerta}</td>
+    return`<tr><td class="fm fw" style="font-size:11.5px">${p.codigo}</td><td><div style="display:flex;align-items:center;gap:8px">${p.imagen_url?`<img src="${p.imagen_url}" alt="" style="width:30px;height:30px;border-radius:6px;object-fit:cover;flex-shrink:0">`:'<div style="width:30px;height:30px;border-radius:6px;background:var(--n1);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--n4);flex-shrink:0">📦</div>'}<span>${p.nombre}${alerta}</span></div></td>
       <td class="tr fm">${fmt(p.precio)}</td><td class="tr fm">${fmt(p.costo||0)}</td>
       <td><div class="fw" style="font-size:12.5px">${p.stock||0} uds</div><div class="sbr"><div class="sbf ${cl}" style="width:${pct}%"></div></div></td>
       <td style="font-size:12px;color:${(p.stock||0)<=(p.stock_min||0)?'var(--er5)':'var(--n5)'}">${p.stock_min||0}</td>
