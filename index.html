@@ -354,6 +354,8 @@ table.t tbody tr:hover{background:var(--b0)}
     <button class="ni" onclick="nav('cuentas')"><span class="ic">📒</span>Plan de Cuentas</button>
     <button class="ni" onclick="nav('asientos')"><span class="ic">📖</span>Asientos</button>
     <button class="ni" onclick="nav('conciliacion')"><span class="ic">🏦</span>Conciliación Bancaria</button>
+    <button class="ni" onclick="nav('diagnostico_ia')"><span class="ic">🤖</span>Diagnóstico Contable IA</button>
+    <button class="ni" onclick="nav('cierre_fiscal')"><span class="ic">🔒</span>Cierre de Ejercicio</button>
     <div class="nl">Comercial</div>
     <button class="ni" onclick="nav('facturas')"><span class="ic">📄</span>Facturas + PDF</button>
     <button class="ni" onclick="nav('cxc')"><span class="ic">💳</span>Cuentas por Cobrar</button>
@@ -372,9 +374,11 @@ table.t tbody tr:hover{background:var(--b0)}
     <div class="nl">Tesorería</div>
     <button class="ni" onclick="nav('bancos')"><span class="ic">🏦</span>Bancos y Cuentas</button>
     <button class="ni" onclick="nav('caja')"><span class="ic">💵</span>Caja</button>
+    <button class="ni" onclick="nav('caja_chica')"><span class="ic">🪙</span>Fondo Caja Chica</button>
     <button class="ni" onclick="nav('tesoreria')"><span class="ic">📊</span>Tesorería Resumen</button>
     <div class="nl">Tributario SRI</div>
     <button class="ni" onclick="nav('compras')"><span class="ic">🛒</span>Compras</button>
+    <button class="ni" onclick="nav('solicitudes')"><span class="ic">📨</span>Solicitudes Electrónicas</button>
     <button class="ni" onclick="nav('retenciones')"><span class="ic">📑</span>Retenciones</button>
     <button class="ni" onclick="nav('ats')"><span class="ic">📊</span>Generador ATS</button>
     <button class="ni" onclick="nav('ice')"><span class="ic">🧊</span>Generador ICE</button>
@@ -567,6 +571,39 @@ table.t tbody tr:hover{background:var(--b0)}
     <div class="ch"><span class="ct">🏦 Movimientos Bancarios</span><button class="btn bo bsm no-print" onclick="limpiarConc()">🗑 Limpiar</button></div>
     <div class="conc-row" style="background:var(--n0);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--n5)"><span>Fecha</span><span>Descripción</span><span>Monto</span><span>Asiento</span><span>Estado</span></div>
     <div id="concBody"><div style="text-align:center;color:var(--n4);padding:32px;font-size:13px">Importa un CSV para comenzar</div></div>
+  </div>
+</section>
+
+<!-- ══ DIAGNÓSTICO CONTABLE CON IA ══ -->
+<section id="s-diagnostico_ia" class="pg hidden">
+  <div class="pg-hd" style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div><h2>Diagnóstico Contable IA</h2><p>Detecta asientos huérfanos, descuadres, facturas/compras sin contabilizar e inventario inconsistente — con explicación y solución redactadas por Claude IA</p></div>
+    <button class="btn bp no-print" id="btnEjecutarDiag" onclick="ejecutarDiagnosticoIA()">🤖 Ejecutar diagnóstico</button>
+  </div>
+  <div id="diagEstadoActual" class="card" style="margin-bottom:14px">
+    <div class="cb" style="text-align:center;color:var(--n5);padding:20px;font-size:13px">Aún no se ha ejecutado ningún diagnóstico para esta empresa</div>
+  </div>
+  <div class="card"><div class="ch"><span class="ct">🗂 Historial de diagnósticos</span></div>
+    <div class="tw"><table class="t"><thead><tr><th>Fecha</th><th class="tr">Hallazgos</th><th>Estado</th><th></th></tr></thead>
+    <tbody id="tDiagnosticos"><tr><td colspan="4" class="te">Sin diagnósticos previos</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<!-- ══ CIERRE DE EJERCICIO FISCAL ══ -->
+<section id="s-cierre_fiscal" class="pg hidden">
+  <div class="pg-hd" style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div><h2>Cierre de Ejercicio Fiscal</h2><p>Cierra las cuentas de Ingreso y Gasto contra Utilidad del Ejercicio, y bloquea el periodo para evitar movimientos retroactivos</p></div>
+    <div class="row no-print">
+      <input type="number" id="cf_anio" class="fc" style="width:110px" placeholder="Año">
+      <button class="btn bp" onclick="ejecutarCierreFiscal()">🔒 Cerrar ejercicio</button>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px"><div class="ch"><span class="ct">📊 Estado del ejercicio actual</span></div>
+    <div class="cb" id="cfEstadoActual" style="text-align:center;color:var(--n5);padding:20px;font-size:13px">Selecciona un año y presiona "Cerrar ejercicio" para calcular la utilidad y bloquear el periodo</div>
+  </div>
+  <div class="card"><div class="ch"><span class="ct">🗂 Historial de cierres</span></div>
+    <div class="tw"><table class="t"><thead><tr><th>Año</th><th>Periodo</th><th class="tr">Ingresos</th><th class="tr">Gastos</th><th class="tr">Utilidad</th><th>Estado</th><th></th></tr></thead>
+    <tbody id="tCierresFiscales"><tr><td colspan="7" class="te">Sin cierres registrados</td></tr></tbody></table></div>
   </div>
 </section>
 <!-- FACTURAS -->
@@ -847,6 +884,20 @@ table.t tbody tr:hover{background:var(--b0)}
     </div>
     <div class="card"><div class="tw"><table class="t"><thead><tr><th>Proveedor</th><th>Factura</th><th>Vencimiento</th><th class="tr">Total</th><th class="tr">Retención</th><th class="tr">Neto a pagar</th><th>Estado</th><th></th></tr></thead><tbody id="tCXP"><tr><td colspan="8" class="te">Sin facturas pendientes</td></tr></tbody></table></div></div>
   </div>
+</section>
+
+<!-- ══ SOLICITUDES ELECTRÓNICAS (Compra / Venta) ══ -->
+<section id="s-solicitudes" class="pg hidden">
+  <div class="pg-hd" style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div><h2>Solicitudes Electrónicas</h2><p>Solicitudes de compra a proveedores y de venta/pedido de clientes, antes de convertirlas en documentos reales</p></div>
+    <div class="row no-print">
+      <button class="btn bo" onclick="abrirNuevaSolicitud('Compra')">+ Solicitud de Compra</button>
+      <button class="btn bp" onclick="abrirNuevaSolicitud('Venta')">+ Solicitud de Venta</button>
+    </div>
+  </div>
+  <div class="stabs"><button class="stab on" onclick="swSolicitudes('todas',this)">📋 Todas</button><button class="stab" onclick="swSolicitudes('Pendiente',this)">⏳ Pendientes</button><button class="stab" onclick="swSolicitudes('Aprobada',this)">✅ Aprobadas</button><button class="stab" onclick="swSolicitudes('Rechazada',this)">🚫 Rechazadas</button><button class="stab" onclick="swSolicitudes('Convertida',this)">🔄 Convertidas</button></div>
+  <div class="card"><div class="tw"><table class="t"><thead><tr><th>Número</th><th>Tipo</th><th>Proveedor / Cliente</th><th>Fecha</th><th>Requerida</th><th class="tr">Subtotal est.</th><th>Prioridad</th><th>Estado</th><th></th></tr></thead>
+  <tbody id="tSolicitudes"><tr><td colspan="9" class="te">Sin solicitudes registradas</td></tr></tbody></table></div></div>
 </section>
 
 <!-- RETENCIONES -->
@@ -1172,6 +1223,61 @@ table.t tbody tr:hover{background:var(--b0)}
   <div class="fg"><label class="fl2">Cuenta contable predeterminada</label><select id="mic_cuenta" class="fc"><option value="">Seleccionar cuenta...</option></select></div>
 </div><div class="mf"><button class="btn bo" onclick="closeM('mItemCompra')">Cancelar</button><button class="btn bp" onclick="saveItemCompra()">💾 Guardar</button></div></div></div>
 
+<!-- Modal Apertura Caja Chica -->
+<div class="mo" id="mCajaChicaApertura"><div class="mb"><div class="mh"><h3>🪙 Abrir Fondo de Caja Chica</h3><button class="mx" onclick="closeM('mCajaChicaApertura')">✕</button></div><div class="mc">
+  <div class="fg"><label class="fl2">Nombre del fondo</label><input type="text" id="cch_nom" class="fc" value="Caja Chica Principal"></div>
+  <div class="g2">
+    <div class="fg"><label class="fl2">Monto del fondo</label><input type="number" id="cch_monto" class="fc" step="0.01" placeholder="500.00"></div>
+    <div class="fg"><label class="fl2">Fecha</label><input type="date" id="cch_fecha" class="fc"></div>
+  </div>
+  <div class="fg"><label class="fl2">Cuenta de origen (de dónde sale el efectivo)</label><select id="cch_cuenta_origen" class="fc"><option value="">Seleccionar cuenta...</option></select></div>
+  <div style="background:var(--b0);border:1px solid var(--b1);border-radius:var(--rm);padding:10px;font-size:12px;color:var(--b7)">
+    💡 Se creará automáticamente el asiento contable: Debe Caja Chica / Haber la cuenta de origen seleccionada.
+  </div>
+</div><div class="mf"><button class="btn bo" onclick="closeM('mCajaChicaApertura')">Cancelar</button><button class="btn bp" onclick="guardarAperturaCajaChica()">💾 Abrir fondo</button></div></div></div>
+
+<!-- Modal Gasto Caja Chica -->
+<div class="mo" id="mCajaChicaGasto"><div class="mb"><div class="mh"><h3>💳 Registrar Gasto de Caja Chica</h3><button class="mx" onclick="closeM('mCajaChicaGasto')">✕</button></div><div class="mc">
+  <div style="font-size:12px;color:var(--n5);margin-bottom:8px">Saldo disponible: <strong class="fm" id="cch_gasto_saldo_disp">$0.00</strong></div>
+  <div class="g2">
+    <div class="fg"><label class="fl2">Monto</label><input type="number" id="cchg_monto" class="fc" step="0.01" placeholder="150.00"></div>
+    <div class="fg"><label class="fl2">Fecha</label><input type="date" id="cchg_fecha" class="fc"></div>
+  </div>
+  <div class="fg"><label class="fl2">Concepto</label><input type="text" id="cchg_concepto" class="fc" placeholder="Pago planilla de luz..."></div>
+  <div class="fg"><label class="fl2">Beneficiario</label><input type="text" id="cchg_beneficiario" class="fc" placeholder="Empresa Eléctrica..."></div>
+  <div class="fg"><label class="fl2">Cuenta de gasto</label><select id="cchg_cuenta" class="fc"><option value="">Seleccionar cuenta...</option></select></div>
+</div><div class="mf"><button class="btn bo" onclick="closeM('mCajaChicaGasto')">Cancelar</button><button class="btn bd" onclick="guardarGastoCajaChica()">💾 Registrar gasto</button></div></div></div>
+
+<!-- Modal Reposición Caja Chica -->
+<div class="mo" id="mCajaChicaReposicion"><div class="mb"><div class="mh"><h3>🔄 Reponer Fondo de Caja Chica</h3><button class="mx" onclick="closeM('mCajaChicaReposicion')">✕</button></div><div class="mc">
+  <div class="g2">
+    <div class="fg"><label class="fl2">Monto a reponer</label><input type="number" id="cchr_monto" class="fc" step="0.01" placeholder="200.00"></div>
+    <div class="fg"><label class="fl2">Fecha</label><input type="date" id="cchr_fecha" class="fc"></div>
+  </div>
+  <div class="fg"><label class="fl2">Cuenta de origen</label><select id="cchr_cuenta_origen" class="fc"><option value="">Seleccionar cuenta...</option></select></div>
+</div><div class="mf"><button class="btn bo" onclick="closeM('mCajaChicaReposicion')">Cancelar</button><button class="btn bp" onclick="guardarReposicionCajaChica()">💾 Reponer</button></div></div></div>
+
+<!-- Modal Solicitud (Compra o Venta) -->
+<div class="mo" id="mSolicitud"><div class="mb lg"><div class="mh"><h3>📨 <span id="sol_ttl">Nueva Solicitud</span></h3><button class="mx" onclick="closeM('mSolicitud')">✕</button></div><div class="mc">
+  <input type="hidden" id="sol_id"><input type="hidden" id="sol_tipo">
+  <div class="g2">
+    <div class="fg"><label class="fl2">Número</label><input type="text" id="sol_num" class="fc" placeholder="SOL-COM-001"></div>
+    <div class="fg"><label class="fl2">Prioridad</label><select id="sol_prio" class="fc"><option>Baja</option><option selected>Normal</option><option>Alta</option><option>Urgente</option></select></div>
+  </div>
+  <div class="g2">
+    <div class="fg"><label class="fl2" id="sol_tercero_lbl">Proveedor</label><select id="sol_tercero" class="fc"><option value="">Seleccionar...</option></select></div>
+    <div class="fg"><label class="fl2">Fecha requerida</label><input type="date" id="sol_fecha_req" class="fc"></div>
+  </div>
+  <div class="fg"><label class="fl2">Observaciones</label><input type="text" id="sol_obs" class="fc" placeholder="Notas adicionales..."></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 6px">
+    <label class="fl2" style="margin:0">Ítems solicitados</label>
+    <button type="button" class="btn bo bsm" onclick="agregarItemSolicitud()">+ Agregar producto</button>
+  </div>
+  <div class="tw"><table class="t"><thead><tr><th>Producto</th><th class="tr">Cantidad</th><th class="tr">Precio est.</th><th class="tr">Total est.</th><th></th></tr></thead>
+  <tbody id="tSolicitudItems"><tr><td colspan="5" class="te">Sin ítems agregados</td></tr></tbody></table></div>
+  <div class="bsr" style="border-top:1px solid var(--n2);margin-top:8px;padding-top:8px"><span><strong>Subtotal estimado:</strong></span><strong class="fm" id="sol_subtotal_txt" style="font-size:15px">$0.00</strong></div>
+</div><div class="mf"><button class="btn bo" onclick="closeM('mSolicitud')">Cancelar</button><button class="btn bp" onclick="guardarSolicitud()">💾 Guardar solicitud</button></div></div></div>
+
 <!-- Modal Proveedor -->
 <div class="mo" id="mProveedor"><div class="mb"><div class="mh"><h3>🏭 <span id="mp_ttl">Nuevo Proveedor</span></h3><button class="mx" onclick="closeM('mProveedor')">✕</button></div><div class="mc">
   <input type="hidden" id="mp_id">
@@ -1295,6 +1401,36 @@ table.t tbody tr:hover{background:var(--b0)}
   <div class="card" style="margin-top:12px"><div class="ch"><span class="ct">🗂 Cierres de caja anteriores</span></div>
     <div class="tw"><table class="t"><thead><tr><th>Fecha</th><th>Apertura</th><th>Cierre</th><th class="tr">Ingr.</th><th class="tr">Egr.</th><th class="tr">Depósitos</th><th class="tr">Saldo final</th></tr></thead>
     <tbody id="tCierresCaja"><tr><td colspan="7" class="te">Sin cierres previos</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<!-- ══ FONDO DE CAJA CHICA ══ -->
+<section id="s-caja_chica" class="pg hidden">
+  <div class="pg-hd"><h2>Fondo de Caja Chica</h2><p>Fondo fijo para gastos menores — cada apertura, gasto y reposición genera su asiento contable automáticamente</p></div>
+  <div id="cchStatusBar" class="caja-cerrada caja-status">
+    <i class="ti ti-lock" aria-hidden="true"></i>
+    <span id="cchStatusTxt">No hay un fondo de caja chica abierto para esta empresa</span>
+    <button class="btn bp bsm" style="margin-left:auto" id="btnAbrirCajaChica" onclick="openM('mCajaChicaApertura')">+ Abrir fondo</button>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card"><div class="ch"><span class="ct">🪙 Saldo disponible</span></div><div class="cb">
+      <div style="font-family:var(--fm);font-size:28px;font-weight:700;color:var(--ok5)" id="cchSaldo">$0.00</div>
+      <div style="font-size:12px;color:var(--n5);margin-top:4px" id="cchFondoTxt">Fondo asignado: $0.00</div>
+      <div class="row" style="margin-top:12px;gap:8px">
+        <button class="btn bd bsm" id="btnGastoCajaChica" onclick="abrirGastoCajaChica()" disabled>- Registrar gasto</button>
+        <button class="btn bo bsm" id="btnReponerCajaChica" onclick="abrirReposicionCajaChica()" disabled>🔄 Reponer fondo</button>
+      </div>
+    </div></div>
+    <div class="card"><div class="ch"><span class="ct">📊 Resumen del fondo</span></div><div class="cb">
+      <div class="bsr"><span>Monto del fondo:</span><strong class="fm" id="cchMontoFondo">$0.00</strong></div>
+      <div class="bsr"><span>Total gastado:</span><strong class="fm" id="cchTotalGastado" style="color:var(--er5)">$0.00</strong></div>
+      <div class="bsr"><span>Total repuesto:</span><strong class="fm" id="cchTotalRepuesto" style="color:var(--b6)">$0.00</strong></div>
+      <div class="bsr" style="border-top:1px solid var(--n2);margin-top:6px;padding-top:6px"><span><strong>Saldo actual:</strong></span><strong class="fm" id="cchSaldoResumen" style="color:var(--ok5);font-size:15px">$0.00</strong></div>
+    </div></div>
+  </div>
+  <div class="card"><div class="ch"><span class="ct">📋 Movimientos de caja chica</span></div>
+    <div class="tw"><table class="t"><thead><tr><th>Fecha</th><th>Tipo</th><th>Concepto</th><th>Beneficiario</th><th class="tr">Monto</th></tr></thead>
+    <tbody id="tCajaChica"><tr><td colspan="5" class="te">Sin movimientos — abre el fondo para comenzar</td></tr></tbody></table></div>
   </div>
 </section>
 
@@ -1540,7 +1676,7 @@ supa.auth.onAuthStateChange((event)=>{
    APP ENGINE
 ═══════════════════════════════════════ */
 let DB=null,CE=null,CEO=null,CS='dashboard',icMsgs=[],CU=null,IVA_RATE=0.12;
-const TITLES={dashboard:'Dashboard',cuentas:'Plan de Cuentas',asientos:'Asientos',conciliacion:'Conciliación Bancaria',facturas:'Facturas',cxc:'Cuentas por Cobrar',crm:'CRM Pipeline',reportes:'Reportes PDF',finanzas:'Finanzas Pro',auditoria:'Auditoría',intercompany:'Intercompany IA',rubros:'Rubros de Nómina',nomina_detalle:'Rol de Pago Detallado',empleados_perfil:'Perfil de Empleados',tesoreria:'Tesorería',bancos:'Bancos y Cuentas',caja:'Caja y Movimientos',nomina:'Nómina RRHH',inventario:'Inventario',admin:'Administración',compras:'Compras (Proveedores)',retenciones:'Retenciones Emitidas',ats:'Generador ATS',ice:'Generador ICE',pos:'Punto de Venta',estadisticas:'Estadísticas'};
+const TITLES={dashboard:'Dashboard',cuentas:'Plan de Cuentas',asientos:'Asientos',conciliacion:'Conciliación Bancaria',diagnostico_ia:'Diagnóstico Contable IA',cierre_fiscal:'Cierre de Ejercicio',facturas:'Facturas',cxc:'Cuentas por Cobrar',crm:'CRM Pipeline',reportes:'Reportes PDF',finanzas:'Finanzas Pro',auditoria:'Auditoría',intercompany:'Intercompany IA',rubros:'Rubros de Nómina',nomina_detalle:'Rol de Pago Detallado',empleados_perfil:'Perfil de Empleados',tesoreria:'Tesorería',bancos:'Bancos y Cuentas',caja:'Caja y Movimientos',caja_chica:'Fondo Caja Chica',nomina:'Nómina RRHH',inventario:'Inventario',admin:'Administración',compras:'Compras (Proveedores)',solicitudes:'Solicitudes Electrónicas',retenciones:'Retenciones Emitidas',ats:'Generador ATS',ice:'Generador ICE',pos:'Punto de Venta',estadisticas:'Estadísticas'};
 // Nota: las funciones de migración de datos demo a IndexedDB (usuarios, empresas,
 // plan_cuentas, accesos_multiempresa, items_compra, hash de contraseñas) se eliminaron
 // porque esas tablas ya viven 100% en Supabase — mantenerlas era código muerto
@@ -1649,7 +1785,7 @@ function nav(s){
   document.querySelectorAll('.ni').forEach(x=>{if(x.textContent.trim().toLowerCase().startsWith((TITLES[s]||s).split(' ')[0].toLowerCase()))x.classList.add('on')});
   document.getElementById('tbtl').textContent=TITLES[s]||s;
   CS=s;closeSidebar();
-  const fn={dashboard:loadDash,cuentas:loadCuentas,asientos:loadAsi,conciliacion:()=>{},facturas:loadFac,cxc:loadCXCModule,crm:loadCRM,reportes:()=>rpt('balance',document.querySelector('.stab')),finanzas:loadFinanzas,auditoria:loadAuditoria,intercompany:loadIC,nomina:loadNom,inventario:renderInvDashboard,admin:loadAdmin,rubros:loadRubros,nomina_detalle:loadNominaDetalle,empleados_perfil:loadEmpleadosPerfil,tesoreria:loadTesoreria,bancos:loadBancos,caja:loadCaja,compras:loadCompras,retenciones:loadRetenciones,ats:loadATS,ice:loadICE,pos:loadPOS,estadisticas:loadEstadisticas};
+  const fn={dashboard:loadDash,cuentas:loadCuentas,asientos:loadAsi,conciliacion:()=>{},diagnostico_ia:loadDiagnosticoIA,cierre_fiscal:loadCierreFiscal,facturas:loadFac,cxc:loadCXCModule,crm:loadCRM,reportes:()=>rpt('balance',document.querySelector('.stab')),finanzas:loadFinanzas,auditoria:loadAuditoria,intercompany:loadIC,nomina:loadNom,inventario:renderInvDashboard,admin:loadAdmin,rubros:loadRubros,nomina_detalle:loadNominaDetalle,empleados_perfil:loadEmpleadosPerfil,tesoreria:loadTesoreria,bancos:loadBancos,caja:loadCaja,caja_chica:loadCajaChica,compras:loadCompras,solicitudes:loadSolicitudes,retenciones:loadRetenciones,ats:loadATS,ice:loadICE,pos:loadPOS,estadisticas:loadEstadisticas};
   fn[s]?.();
 }
 async function refresh(){nav(CS)}
@@ -1785,6 +1921,9 @@ function openM(id){
   if(id==='mEmpresa'){document.getElementById('mEmpresaTtl').textContent='Nueva Empresa';document.getElementById('em_id').value='';['em_nom','em_ruc'].forEach(x=>document.getElementById(x).value='')}
   if(id==='mCompra'){document.getElementById('mc_fec').valueAsDate=new Date();document.getElementById('mc_freg').valueAsDate=new Date();poblarSustento();fillCtasCompraSel('mc_cuenta');fillItemsCompraSel(document.getElementById('mc_tipo').value||'Gastos')}
   if(id==='mItemCompra'){fillCtasCompraSel('mic_cuenta')}
+  if(id==='mCajaChicaApertura'){document.getElementById('cch_fecha').valueAsDate=new Date();document.getElementById('cch_monto').value='';fillCtasCompraSel('cch_cuenta_origen')}
+  if(id==='mCajaChicaGasto'){document.getElementById('cchg_fecha').valueAsDate=new Date();['cchg_monto','cchg_concepto','cchg_beneficiario'].forEach(x=>document.getElementById(x).value='');fillCtasGastoSel('cchg_cuenta');document.getElementById('cch_gasto_saldo_disp').textContent=document.getElementById('cchSaldo').textContent}
+  if(id==='mCajaChicaReposicion'){document.getElementById('cchr_fecha').valueAsDate=new Date();document.getElementById('cchr_monto').value='';fillCtasCompraSel('cchr_cuenta_origen')}
   if(id==='mRetencion'){document.getElementById('mr_fec').valueAsDate=new Date();calcRetencion()}
   if(id==='mProd'){poblarIceSel()}
 }
@@ -4261,7 +4400,7 @@ function imprimirATS(){document.getElementById('pdfHdrATS').style.display='block
 function poblarSustento(){const sel=document.getElementById('mc_sus');if(sel&&sel.options.length<=1){SUSTENTO_TRIBUTARIO.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o)})}}
 function poblarIceSel(){const sel=document.getElementById('p_ice');if(sel&&sel.options.length<=1){ICE_CODIGOS.forEach(ic=>{const o=document.createElement('option');o.value=ic.cod;o.textContent=ic.desc;sel.appendChild(o)})}}
 function fmt(n){return'$'+parseFloat(n||0).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function bdg(e){const m={Aprobado:'bg',Autorizada:'bg',Activa:'bg',Cerrado:'bg',Pagado:'bb',Completada:'bb',Prospecto:'bgr',Borrador:'ba',Pendiente:'ba',Contactado:'ba',Propuesta:'bpu',Negociación:'bpu',Llamada:'bb',Reunión:'bpu',Demo:'ba',Seguimiento:'ba',Anulada:'br',Inactiva:'br',Activo:'bg',Pasivo:'ba',Patrimonio:'bpu',Ingreso:'bg',Gasto:'br'};return`<span class="badge ${m[e]||'bgr'}">${e}</span>`}
+function bdg(e){const m={Aprobado:'bg',Aprobada:'bg',Autorizada:'bg',Activa:'bg',Cerrado:'bg',Pagado:'bb',Convertida:'bb',Completada:'bb',Prospecto:'bgr',Borrador:'ba',Pendiente:'ba',Contactado:'ba',Propuesta:'bpu',Negociación:'bpu',Llamada:'bb',Reunión:'bpu',Demo:'ba',Seguimiento:'ba',Anulada:'br',Rechazada:'br',Inactiva:'br',Activo:'bg',Pasivo:'ba',Patrimonio:'bpu',Ingreso:'bg',Gasto:'br'};return`<span class="badge ${m[e]||'bgr'}">${e}</span>`}
 
 /* ── ICE PRODUCT CODES (catálogo SRI abreviado) ── */
 const ICE_CODIGOS=[
@@ -5558,6 +5697,334 @@ async function exportarMovCaja(){
   const ws=XLSX.utils.aoa_to_sheet([...hdr,...rows]);ws['!cols']=[{wch:12},{wch:10},{wch:10},{wch:30},{wch:12},{wch:20}];
   XLSX.utils.book_append_sheet(wb,ws,'Movimientos Caja');
   XLSX.writeFile(wb,`MovCaja_${CEO?.nombre?.split(' ')[0]||'empresa'}_${new Date().toISOString().slice(0,10)}.xlsx`);toast('Exportado','ok');
+}
+
+/* ── Fondo de Caja Chica ──
+   Todas las operaciones llaman a funciones RPC de Supabase (fn_abrir_caja_chica,
+   fn_registrar_gasto_caja_chica, fn_reponer_caja_chica) que crean el asiento
+   contable COMPLETO (encabezado + líneas) en una sola transacción del lado del
+   servidor. A propósito NO se usa crearAsientoAuto() aquí: esa función solo
+   escribe el encabezado del asiento y nunca sus líneas, que es la causa raíz de
+   los asientos huérfanos vistos en Caja/Compras/CxC. */
+let cchActual=null;
+async function loadCajaChica(){
+  if(!CE)return;
+  const{data:cc}=await supa.from('caja_chica').select('*').eq('empresa_id',CE).eq('estado','Activa').order('created_at',{ascending:false}).limit(1).maybeSingle();
+  cchActual=cc||null;
+  const btnAb=document.getElementById('btnAbrirCajaChica');
+  const statusBar=document.getElementById('cchStatusBar');
+  const statusTxt=document.getElementById('cchStatusTxt');
+  const btnGasto=document.getElementById('btnGastoCajaChica');
+  const btnRep=document.getElementById('btnReponerCajaChica');
+  if(cchActual){
+    btnAb.textContent='✅ Fondo abierto';btnAb.disabled=true;
+    statusBar.className='caja-abierta caja-status';
+    statusTxt.textContent=`${cchActual.nombre} — abierto desde ${cchActual.fecha_apertura}`;
+    btnGasto.disabled=false;btnRep.disabled=false;
+  }else{
+    btnAb.textContent='+ Abrir fondo';btnAb.disabled=false;
+    statusBar.className='caja-cerrada caja-status';
+    statusTxt.textContent='No hay un fondo de caja chica abierto para esta empresa';
+    btnGasto.disabled=true;btnRep.disabled=true;
+  }
+  document.getElementById('cchSaldo').textContent=fmt(cchActual?.saldo_actual||0);
+  document.getElementById('cchFondoTxt').textContent='Fondo asignado: '+fmt(cchActual?.monto_fondo||0);
+  document.getElementById('cchMontoFondo').textContent=fmt(cchActual?.monto_fondo||0);
+  document.getElementById('cchSaldoResumen').textContent=fmt(cchActual?.saldo_actual||0);
+  if(!cchActual){
+    document.getElementById('cchTotalGastado').textContent=fmt(0);
+    document.getElementById('cchTotalRepuesto').textContent=fmt(0);
+    document.getElementById('tCajaChica').innerHTML='<tr><td colspan="5" class="te">Sin movimientos — abre el fondo para comenzar</td></tr>';
+    return;
+  }
+  const{data:movsD}=await supa.from('caja_chica_movimientos').select('*').eq('caja_chica_id',cchActual.id).order('created_at',{ascending:false});
+  const movs=movsD||[];
+  const totalGastado=movs.filter(m=>m.tipo==='Gasto').reduce((s,m)=>s+parseFloat(m.monto||0),0);
+  const totalRepuesto=movs.filter(m=>m.tipo==='Reposicion').reduce((s,m)=>s+parseFloat(m.monto||0),0);
+  document.getElementById('cchTotalGastado').textContent=fmt(totalGastado);
+  document.getElementById('cchTotalRepuesto').textContent=fmt(totalRepuesto);
+  document.getElementById('tCajaChica').innerHTML=movs.length?movs.map(m=>`<tr>
+    <td>${m.fecha}</td>
+    <td>${m.tipo==='Apertura'?'<span class="badge bb">Apertura</span>':m.tipo==='Gasto'?'<span class="badge br">Gasto</span>':m.tipo==='Reposicion'?'<span class="badge bg">Reposición</span>':'<span class="badge ba">Ajuste</span>'}</td>
+    <td>${m.concepto||'—'}</td>
+    <td>${m.beneficiario||'—'}</td>
+    <td class="tr fm" style="font-weight:600;color:${m.tipo==='Gasto'?'var(--er5)':'var(--ok5)'}">${m.tipo==='Gasto'?'-':'+'}${fmt(m.monto)}</td>
+  </tr>`).join(''):'<tr><td colspan="5" class="te">Sin movimientos</td></tr>';
+}
+async function fillCtasGastoSel(selId){
+  if(!CE)return;
+  const{data}=await supa.from('plan_cuentas').select('*').eq('empresa_id',CE).eq('clase',5).eq('es_detalle',true).order('codigo');
+  const cs=data||[];
+  const s=document.getElementById(selId);if(!s)return;
+  s.innerHTML='<option value="">Seleccionar cuenta de gasto...</option>'+cs.map(c=>`<option value="${c.id}">${c.codigo} — ${c.nombre}</option>`).join('');
+}
+async function guardarAperturaCajaChica(){
+  if(!CE)return toast('Selecciona una empresa','er');
+  const nombre=document.getElementById('cch_nom').value.trim()||'Caja Chica Principal';
+  const monto=parseFloat(document.getElementById('cch_monto').value)||0;
+  const cuentaOrigen=document.getElementById('cch_cuenta_origen').value;
+  const fecha=document.getElementById('cch_fecha').value;
+  if(monto<=0)return toast('Ingresa el monto del fondo','er');
+  if(!cuentaOrigen)return toast('Selecciona la cuenta de origen','er');
+  const{data:ccInfo}=await supa.from('plan_cuentas').select('*').eq('empresa_id',CE).ilike('nombre','Caja Chica').maybeSingle();
+  if(!ccInfo)return toast('Esta empresa no tiene configurada la cuenta "Caja Chica" en su plan de cuentas','er');
+  const{error}=await supa.rpc('fn_abrir_caja_chica',{p_empresa_id:CE,p_nombre:nombre,p_monto:monto,p_cuenta_caja_chica_id:ccInfo.id,p_cuenta_origen_id:cuentaOrigen,p_responsable_id:CU?.id||null,p_usuario_id:CU?.id||null,p_fecha:fecha});
+  if(error){toast('Error al abrir el fondo: '+error.message,'er');return}
+  closeM('mCajaChicaApertura');toast('Fondo de caja chica abierto con '+fmt(monto),'ok');await loadCajaChica();
+}
+function abrirGastoCajaChica(){if(!cchActual)return toast('Primero abre el fondo de caja chica','er');openM('mCajaChicaGasto')}
+async function guardarGastoCajaChica(){
+  if(!cchActual)return toast('No hay un fondo abierto','er');
+  const monto=parseFloat(document.getElementById('cchg_monto').value)||0;
+  const cuenta=document.getElementById('cchg_cuenta').value;
+  const concepto=document.getElementById('cchg_concepto').value.trim();
+  const beneficiario=document.getElementById('cchg_beneficiario').value.trim();
+  const fecha=document.getElementById('cchg_fecha').value;
+  if(monto<=0)return toast('Ingresa el monto','er');
+  if(!cuenta)return toast('Selecciona la cuenta de gasto','er');
+  if(!concepto)return toast('Ingresa el concepto','er');
+  const{error}=await supa.rpc('fn_registrar_gasto_caja_chica',{p_caja_chica_id:cchActual.id,p_monto:monto,p_cuenta_gasto_id:cuenta,p_concepto:concepto,p_beneficiario:beneficiario||null,p_usuario_id:CU?.id||null,p_fecha:fecha});
+  if(error){toast('Error al registrar el gasto: '+error.message,'er');return}
+  closeM('mCajaChicaGasto');toast('Gasto registrado: '+fmt(monto),'ok');await loadCajaChica();
+}
+function abrirReposicionCajaChica(){if(!cchActual)return toast('Primero abre el fondo de caja chica','er');openM('mCajaChicaReposicion')}
+async function guardarReposicionCajaChica(){
+  if(!cchActual)return toast('No hay un fondo abierto','er');
+  const monto=parseFloat(document.getElementById('cchr_monto').value)||0;
+  const cuentaOrigen=document.getElementById('cchr_cuenta_origen').value;
+  const fecha=document.getElementById('cchr_fecha').value;
+  if(monto<=0)return toast('Ingresa el monto a reponer','er');
+  if(!cuentaOrigen)return toast('Selecciona la cuenta de origen','er');
+  const{error}=await supa.rpc('fn_reponer_caja_chica',{p_caja_chica_id:cchActual.id,p_monto:monto,p_cuenta_origen_id:cuentaOrigen,p_usuario_id:CU?.id||null,p_fecha:fecha});
+  if(error){toast('Error al reponer el fondo: '+error.message,'er');return}
+  closeM('mCajaChicaReposicion');toast('Fondo repuesto con '+fmt(monto),'ok');await loadCajaChica();
+}
+
+/* ── Solicitudes Electrónicas (Compra / Venta) ── */
+let solCart=[],solFilter='todas';
+function swSolicitudes(f,btn){solFilter=f;document.querySelectorAll('#s-solicitudes .stab').forEach(b=>b.classList.remove('on'));btn?.classList.add('on');loadSolicitudes()}
+async function loadSolicitudes(){
+  if(!CE)return;
+  const{data:rowsD}=await supa.from('solicitudes').select('*').eq('empresa_id',CE).order('created_at',{ascending:false});
+  let rows=rowsD||[];
+  if(solFilter!=='todas')rows=rows.filter(r=>r.estado===solFilter);
+  document.getElementById('tSolicitudes').innerHTML=rows.length?rows.map(s=>`<tr>
+    <td class="fm fw" style="font-size:11.5px">${s.numero}</td>
+    <td>${s.tipo==='Compra'?'🛒 Compra':'💰 Venta'}</td>
+    <td class="fw">${s.tercero_nombre||'—'}</td>
+    <td>${s.fecha}</td>
+    <td>${s.fecha_requerida||'—'}</td>
+    <td class="tr fm">${fmt(s.subtotal)}</td>
+    <td>${s.prioridad}</td>
+    <td>${bdg(s.estado)}</td>
+    <td style="display:flex;gap:4px">
+      ${s.estado==='Pendiente'?`<button class="btn bs bsm bic" title="Aprobar" onclick="aprobarSolicitudUI('${s.id}')">✔</button><button class="btn bd bsm bic" title="Rechazar" onclick="rechazarSolicitudUI('${s.id}')">✕</button>`:''}
+      ${s.estado==='Aprobada'&&s.tipo==='Compra'?`<button class="btn bo bsm bic" title="Convertir a Compra" onclick="convertirSolicitudUI('${s.id}')">🔄</button>`:''}
+    </td></tr>`).join(''):'<tr><td colspan="9" class="te">Sin solicitudes registradas</td></tr>';
+}
+async function abrirNuevaSolicitud(tipo){
+  if(!CE)return toast('Selecciona una empresa','er');
+  document.getElementById('sol_ttl').textContent='Nueva Solicitud de '+tipo;
+  document.getElementById('sol_id').value='';
+  document.getElementById('sol_tipo').value=tipo;
+  document.getElementById('sol_num').value='SOL-'+(tipo==='Compra'?'COM':'VEN')+'-'+String(Date.now()).slice(-6);
+  document.getElementById('sol_prio').value='Normal';
+  document.getElementById('sol_obs').value='';
+  document.getElementById('sol_fecha_req').value='';
+  document.getElementById('sol_tercero_lbl').textContent=tipo==='Compra'?'Proveedor':'Cliente';
+  const sel=document.getElementById('sol_tercero');
+  if(tipo==='Compra'){
+    const{data}=await supa.from('proveedores').select('*').eq('empresa_id',CE);
+    sel.innerHTML='<option value="">Seleccionar proveedor...</option>'+(data||[]).map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+  }else{
+    const{data}=await supa.from('clientes').select('*').eq('empresa_id',CE);
+    sel.innerHTML='<option value="">Seleccionar cliente...</option>'+(data||[]).map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+  }
+  solCart=[];renderSolicitudItems();openM('mSolicitud');
+}
+async function agregarItemSolicitud(){
+  if(!CE)return;
+  const{data}=await supa.from('productos').select('*').eq('empresa_id',CE);
+  const productos=data||[];
+  if(!productos.length)return toast('Esta empresa no tiene productos registrados','er');
+  const opciones=productos.map((p,i)=>`${i+1}. ${p.nombre} ($${p.precio})`).join('\n');
+  const sel=prompt('Elige el número del producto:\n'+opciones);
+  const idx=parseInt(sel)-1;
+  const p=productos[idx];
+  if(!p)return;
+  const cantidad=parseFloat(prompt('Cantidad:','1'))||1;
+  solCart.push({producto_id:p.id,nombre:p.nombre,cantidad,precio_estimado:p.precio||0});
+  renderSolicitudItems();
+}
+function quitarItemSolicitud(idx){solCart.splice(idx,1);renderSolicitudItems()}
+function renderSolicitudItems(){
+  const el=document.getElementById('tSolicitudItems');
+  el.innerHTML=solCart.length?solCart.map((it,idx)=>`<tr>
+    <td>${it.nombre}</td>
+    <td class="tr fm">${it.cantidad}</td>
+    <td class="tr fm">${fmt(it.precio_estimado)}</td>
+    <td class="tr fm">${fmt(it.cantidad*it.precio_estimado)}</td>
+    <td><button class="btn bd bsm bic" onclick="quitarItemSolicitud(${idx})">🗑</button></td>
+  </tr>`).join(''):'<tr><td colspan="5" class="te">Sin ítems agregados</td></tr>';
+  const subtotal=solCart.reduce((s,it)=>s+it.cantidad*it.precio_estimado,0);
+  document.getElementById('sol_subtotal_txt').textContent=fmt(subtotal);
+}
+async function guardarSolicitud(){
+  if(!CE)return toast('Selecciona una empresa','er');
+  const tipo=document.getElementById('sol_tipo').value;
+  const numero=document.getElementById('sol_num').value.trim();
+  const terceroId=document.getElementById('sol_tercero').value;
+  if(!numero)return toast('Ingresa el número de solicitud','er');
+  if(!terceroId)return toast('Selecciona '+(tipo==='Compra'?'el proveedor':'el cliente'),'er');
+  if(!solCart.length)return toast('Agrega al menos un producto','er');
+  const terceroNombre=document.getElementById('sol_tercero').selectedOptions[0]?.textContent||'';
+  const subtotal=solCart.reduce((s,it)=>s+it.cantidad*it.precio_estimado,0);
+  const payload={
+    empresa_id:CE,tipo,numero,tercero_tipo:tipo==='Compra'?'Proveedor':'Cliente',
+    proveedor_id:tipo==='Compra'?terceroId:null,cliente_id:tipo==='Venta'?terceroId:null,
+    tercero_nombre:terceroNombre,fecha_requerida:document.getElementById('sol_fecha_req').value||null,
+    prioridad:document.getElementById('sol_prio').value,subtotal,observaciones:document.getElementById('sol_obs').value.trim(),
+    creado_por:CU?.id||null
+  };
+  const{data:sol,error}=await supa.from('solicitudes').insert(payload).select().single();
+  if(error){toast('Error al guardar: '+error.message,'er');return}
+  const items=solCart.map((it,i)=>({solicitud_id:sol.id,producto_id:it.producto_id,nombre:it.nombre,cantidad:it.cantidad,precio_estimado:it.precio_estimado,total_estimado:it.cantidad*it.precio_estimado,orden:i+1}));
+  if(items.length)await supa.from('solicitud_items').insert(items);
+  closeM('mSolicitud');toast('Solicitud '+numero+' registrada','ok');await loadSolicitudes();
+}
+async function aprobarSolicitudUI(id){
+  if(!confirm('¿Aprobar esta solicitud?'))return;
+  const{error}=await supa.rpc('fn_aprobar_solicitud',{p_solicitud_id:id,p_usuario_id:CU?.id||null});
+  if(error){toast('Error: '+error.message,'er');return}
+  toast('Solicitud aprobada','ok');await loadSolicitudes();
+}
+async function rechazarSolicitudUI(id){
+  const motivo=prompt('Motivo del rechazo:');
+  if(motivo===null)return;
+  const{error}=await supa.rpc('fn_rechazar_solicitud',{p_solicitud_id:id,p_usuario_id:CU?.id||null,p_motivo:motivo||'Sin motivo especificado'});
+  if(error){toast('Error: '+error.message,'er');return}
+  toast('Solicitud rechazada','wn');await loadSolicitudes();
+}
+async function convertirSolicitudUI(id){
+  if(!confirm('¿Convertir esta solicitud en una Compra real (Cuenta por Pagar)?'))return;
+  const numeroCompra=prompt('Número de la factura de compra del proveedor:');
+  if(!numeroCompra)return;
+  const{data:itemCompra}=await supa.from('items_compra').select('*').eq('empresa_id',CE).limit(1).maybeSingle();
+  const{data:cuentaInv}=await supa.from('plan_cuentas').select('*').eq('empresa_id',CE).ilike('nombre','%Inventario%').eq('es_detalle',true).limit(1).maybeSingle();
+  if(!itemCompra||!cuentaInv)return toast('Esta empresa necesita al menos un Ítem de Compra y una cuenta de Inventario configurados','er');
+  const{error}=await supa.rpc('fn_convertir_solicitud_compra',{p_solicitud_id:id,p_numero_compra:numeroCompra,p_item_id:itemCompra.id,p_cuenta_id:cuentaInv.id,p_usuario_id:CU?.id||null});
+  if(error){toast('Error al convertir: '+error.message,'er');return}
+  toast('Solicitud convertida en Compra Nº '+numeroCompra,'ok');await loadSolicitudes();
+}
+
+/* ── Diagnóstico Contable con IA ──
+   Llama a la Edge Function 'diagnostico-ia', que corre el motor de detección
+   determinístico (fn_detectar_errores_contables) y, si hay hallazgos, le pide a
+   Claude que redacte la explicación y solución en lenguaje natural para el
+   contador/administrador. La API key de Anthropic vive SOLO como secreto de la
+   Edge Function — nunca se expone en el navegador. */
+function mdBasico(txt){
+  if(!txt)return'';
+  return txt
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.*)$/gm,'<h4 style="margin:14px 0 4px;color:var(--b6)">$1</h4>')
+    .replace(/^## (.*)$/gm,'<h3 style="margin:16px 0 6px">$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^- (.*)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g,m=>'<ul style="margin:4px 0 8px;padding-left:20px">'+m+'</ul>')
+    .replace(/\n{2,}/g,'</p><p style="margin:6px 0">')
+    .replace(/\n/g,'<br>');
+}
+let diagCache=[];
+async function loadDiagnosticoIA(){
+  if(!CE)return;
+  const{data:diagsD}=await supa.from('diagnosticos_contables').select('*').eq('empresa_id',CE).order('created_at',{ascending:false});
+  diagCache=diagsD||[];
+  document.getElementById('tDiagnosticos').innerHTML=diagCache.length?diagCache.map(d=>`<tr>
+    <td style="font-size:11.5px">${new Date(d.created_at).toLocaleString('es-EC',{dateStyle:'short',timeStyle:'short'})}</td>
+    <td class="tr fw" style="color:${d.total_hallazgos>0?'var(--er5)':'var(--ok5)'}">${d.total_hallazgos}</td>
+    <td>${bdg(d.estado)}</td>
+    <td style="display:flex;gap:4px">
+      <button class="btn bo bsm" onclick="verDiagnostico('${d.id}')">Ver reporte</button>
+      ${d.estado!=='Resuelto'?`<button class="btn bs bsm" onclick="marcarDiagnosticoResuelto('${d.id}')">✔ Marcar resuelto</button>`:''}
+    </td></tr>`).join(''):'<tr><td colspan="4" class="te">Sin diagnósticos previos</td></tr>';
+  if(diagCache.length)verDiagnostico(diagCache[0].id);
+}
+function verDiagnostico(id){
+  const d=diagCache.find(x=>x.id===id);
+  const el=document.getElementById('diagEstadoActual');
+  if(!d){el.innerHTML='<div class="cb" style="text-align:center;color:var(--n5);padding:20px;font-size:13px">Aún no se ha ejecutado ningún diagnóstico para esta empresa</div>';return}
+  el.innerHTML=`<div class="ch"><span class="ct">${d.total_hallazgos>0?'⚠️ '+d.total_hallazgos+' hallazgo(s) detectado(s)':'✅ Sin hallazgos'}</span><span style="font-size:11.5px;color:var(--n5)">Ejecutado: ${new Date(d.created_at).toLocaleString('es-EC')}</span></div>
+  <div class="cb" style="font-size:13.5px;line-height:1.5">${mdBasico(d.reporte_ia)}</div>`;
+}
+async function ejecutarDiagnosticoIA(){
+  if(!CE)return toast('Selecciona una empresa','er');
+  const btn=document.getElementById('btnEjecutarDiag');
+  btn.disabled=true;btn.textContent='🤖 Analizando...';
+  document.getElementById('diagEstadoActual').innerHTML='<div class="cb" style="text-align:center;color:var(--n5);padding:24px;font-size:13px">Ejecutando reglas de detección y consultando a Claude IA...</div>';
+  try{
+    const{data,error}=await supa.functions.invoke('diagnostico-ia',{body:{empresa_id:CE}});
+    if(error)throw error;
+    if(data?.error)throw new Error(data.error);
+    toast(data.diagnostico.total_hallazgos>0?'Diagnóstico completado: '+data.diagnostico.total_hallazgos+' hallazgo(s)':'Diagnóstico completado: sin hallazgos','ok');
+    await loadDiagnosticoIA();
+  }catch(err){
+    document.getElementById('diagEstadoActual').innerHTML=`<div class="cb" style="color:var(--er5);font-size:13px;padding:16px">❌ Error al ejecutar el diagnóstico: ${err.message||err}</div>`;
+    toast('Error: '+(err.message||err),'er');
+  }finally{
+    btn.disabled=false;btn.textContent='🤖 Ejecutar diagnóstico';
+  }
+}
+async function marcarDiagnosticoResuelto(id){
+  const{error}=await supa.from('diagnosticos_contables').update({estado:'Resuelto',resuelto_por:CU?.id||null,fecha_resolucion:new Date().toISOString()}).eq('id',id);
+  if(error){toast('No se pudo actualizar: '+error.message,'er');return}
+  toast('Marcado como resuelto','ok');await loadDiagnosticoIA();
+}
+
+/* ── Cierre de Ejercicio Fiscal ──
+   fn_cerrar_ejercicio_fiscal calcula los saldos de Ingreso/Gasto del año, genera
+   los asientos de cierre contra Utilidad del Ejercicio, y registra el periodo
+   como Cerrado. Desde ese momento el trigger fn_validar_periodo_abierto bloquea
+   cualquier asiento/factura/compra con fecha dentro de ese año para esta empresa. */
+let cierresFiscalesCache=[];
+async function loadCierreFiscal(){
+  if(!CE)return;
+  document.getElementById('cf_anio').value=document.getElementById('cf_anio').value||new Date().getFullYear();
+  const{data}=await supa.from('cierres_fiscales').select('*').eq('empresa_id',CE).order('periodo_anio',{ascending:false});
+  cierresFiscalesCache=data||[];
+  document.getElementById('tCierresFiscales').innerHTML=cierresFiscalesCache.length?cierresFiscalesCache.map(c=>`<tr>
+    <td class="fw">${c.periodo_anio}</td>
+    <td style="font-size:11.5px">${c.fecha_inicio} → ${c.fecha_fin}</td>
+    <td class="tr fm" style="color:var(--ok5)">${fmt(c.total_ingresos)}</td>
+    <td class="tr fm" style="color:var(--er5)">${fmt(c.total_gastos)}</td>
+    <td class="tr fm fw">${fmt(c.utilidad_ejercicio)}</td>
+    <td>${bdg(c.estado)}</td>
+    <td>${c.estado==='Cerrado'?`<button class="btn bo bsm" onclick="reabrirCierreFiscalUI('${c.id}')">🔓 Reabrir</button>`:''}</td>
+  </tr>`).join(''):'<tr><td colspan="7" class="te">Sin cierres registrados</td></tr>';
+  const actual=cierresFiscalesCache[0];
+  const el=document.getElementById('cfEstadoActual');
+  if(!actual){el.innerHTML='Selecciona un año y presiona "Cerrar ejercicio" para calcular la utilidad y bloquear el periodo';return}
+  el.innerHTML=`<div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center">
+    <div><div style="font-size:11px;color:var(--n5)">Último ejercicio</div><div style="font-size:20px;font-weight:700">${actual.periodo_anio}</div></div>
+    <div><div style="font-size:11px;color:var(--n5)">Estado</div><div style="margin-top:2px">${bdg(actual.estado)}</div></div>
+    <div><div style="font-size:11px;color:var(--n5)">Utilidad del ejercicio</div><div style="font-size:20px;font-weight:700;color:var(--ok5)">${fmt(actual.utilidad_ejercicio)}</div></div>
+  </div>`;
+}
+async function ejecutarCierreFiscal(){
+  if(!CE)return toast('Selecciona una empresa','er');
+  const anio=parseInt(document.getElementById('cf_anio').value);
+  if(!anio)return toast('Ingresa el año del ejercicio a cerrar','er');
+  if(!confirm(`¿Cerrar el ejercicio fiscal ${anio}? Se bloquearán los movimientos con fecha dentro de ese año.`))return;
+  const{data,error}=await supa.rpc('fn_cerrar_ejercicio_fiscal',{p_empresa_id:CE,p_anio:anio,p_usuario_id:CU?.id||null});
+  if(error){toast('Error al cerrar el ejercicio: '+error.message,'er');return}
+  toast('Ejercicio '+anio+' cerrado correctamente','ok');await loadCierreFiscal();
+}
+async function reabrirCierreFiscalUI(id){
+  const motivo=prompt('Motivo de la reapertura (obligatorio para auditoría):');
+  if(!motivo)return;
+  const{error}=await supa.rpc('fn_reabrir_ejercicio_fiscal',{p_cierre_id:id,p_usuario_id:CU?.id||null,p_motivo:motivo});
+  if(error){toast('Error al reabrir: '+error.message,'er');return}
+  toast('Ejercicio reabierto','wn');await loadCierreFiscal();
 }
 
 /* Extended openM: handles all dynamic populates */
